@@ -1,0 +1,256 @@
+// Advanced Prisma Schema for PostgreSQL
+// Optimized for Fleet Financial Intelligence System (JExpress)
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                String    @id @default(uuid()) @db.Uuid
+  name              String
+  email             String    @unique
+  password          String
+  role              String    @default("ADMIN")
+  profileImage      String?
+  phoneNumber       String?
+  tokenVersion      Int       @default(0)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  loginAttempts     LoginAttempt[]
+  otpCodes          OtpCode[]
+  auditLogs         AuditLog[]
+  sessions          Session[]
+  securityLogs      SecurityLog[]
+
+  // Existing relations (keeping for compatibility)
+  incomes           Income[]
+  expenses          Expense[]
+  fuelPurchases     FuelPurchase[] @relation("DriverFuelPurchases")
+  createdReports    Report[]
+  vehiclesCreated   Vehicle[] @relation("VehicleCreator")
+
+  @@index([email])
+}
+
+model SecurityLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @db.Uuid
+  action      String   // e.g., PASSWORD_CHANGE
+  ipAddress   String?
+  deviceInfo  String?
+  timestamp   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model LoginAttempt {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String?  @db.Uuid
+  ipAddress   String?
+  deviceInfo  String?
+  status      String   // SUCCESS, FAILED, PENDING_OTP
+  createdAt   DateTime @default(now())
+
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model OtpCode {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @db.Uuid
+  code        String
+  type        String   @default("LOGIN")
+  expiresAt   DateTime
+  isUsed      Boolean  @default(false)
+  attempts    Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, code])
+}
+
+model Vehicle {
+  id                String    @id @default(uuid()) @db.Uuid
+  vehicleName       String
+  brand             String
+  model             String
+  year              Int
+  plateNumber       String    @unique
+  vinNumber         String?   @unique
+  color             String?
+  fuelType          String?   // gasoline, diesel, electric, hybrid
+  transmission      String?   // automatic, manual
+  mileage           Decimal   @default(0) @db.Decimal(15, 2)
+  insuranceExpiry   DateTime?
+  roadworthyExpiry  DateTime?
+  purchaseDate      DateTime?
+  status            String    @default("active") // active, maintenance, inactive, archived
+  notes             String?   @db.Text
+  createdBy         String?   @db.Uuid
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+
+  creator           User?     @relation("VehicleCreator", fields: [createdBy], references: [id])
+  incomes           Income[]
+  expenses          Expense[]
+  fuelPurchases     FuelPurchase[]
+  maintenanceRecords MaintenanceRecord[]
+
+  @@index([plateNumber])
+  @@index([status])
+  @@index([createdBy])
+}
+
+model Income {
+  id          String   @id @default(uuid()) @db.Uuid
+  vehicleId   String   @db.Uuid
+  driverId    String   @db.Uuid
+  amount      Decimal  @db.Decimal(15, 2)
+  date        DateTime
+  source      String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  driver      User     @relation(fields: [driverId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, date])
+  @@index([driverId])
+}
+
+model Expense {
+  id          String   @id @default(uuid()) @db.Uuid
+  vehicleId   String   @db.Uuid
+  userId      String   @db.Uuid
+  category    String
+  amount      Decimal  @db.Decimal(15, 2)
+  date        DateTime
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, date])
+  @@index([category])
+}
+
+model FuelPurchase {
+  id              String   @id @default(uuid()) @db.Uuid
+  vehicleId       String   @db.Uuid
+  driverId        String   @db.Uuid
+  liters          Decimal  @db.Decimal(10, 2)
+  costPerLiter    Decimal  @db.Decimal(10, 2)
+  totalCost       Decimal  @db.Decimal(15, 2)
+  odometerReading Decimal  @db.Decimal(15, 2)
+  date            DateTime
+  stationName     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  vehicle         Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  driver          User     @relation("DriverFuelPurchases", fields: [driverId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, date])
+}
+
+model MaintenanceRecord {
+  id              String   @id @default(uuid()) @db.Uuid
+  vehicleId       String   @db.Uuid
+  serviceType     String
+  cost            Decimal  @db.Decimal(15, 2)
+  date            DateTime
+  odometerReading Int
+  notes           String?
+  serviceCenter   String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  vehicle         Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, date])
+}
+
+model Report {
+  id        String   @id @default(uuid()) @db.Uuid
+  title     String
+  type      String
+  data      Json
+  createdBy String   @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  creator   User     @relation(fields: [createdBy], references: [id])
+
+  @@index([type])
+  @@index([createdBy])
+}
+
+model Setting {
+  id        String   @id @default(uuid()) @db.Uuid
+  key       String   @unique
+  value     Json?
+  type      String   @default("string")
+  group     String   @default("general")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+  @@index([group])
+}
+
+model AuditLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String?  @db.Uuid
+  action      String
+  modelType   String
+  modelId     String   @db.Uuid
+  oldValues   Json?
+  newValues   Json?
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([modelType, modelId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id
+  userId       String?  @db.Uuid
+  ipAddress    String?
+  userAgent    String?
+  payload      String   @db.Text
+  lastActivity Int
+
+  user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([lastActivity])
+}
+
+model Notification {
+  id             String    @id @default(uuid()) @db.Uuid
+  type           String
+  notifiableType String
+  notifiableId   String    @db.Uuid
+  data           String    @db.Text
+  readAt         DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([notifiableType, notifiableId])
+}
