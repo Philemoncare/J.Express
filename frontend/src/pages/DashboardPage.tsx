@@ -29,46 +29,69 @@ const FintechCard = ({ title, value, change, icon: Icon, color, data, isLoading 
 
   if (isLoading) {
     return (
-      <div className="bg-[#0b0f1a] border border-white/5 rounded-[2rem] p-6 h-40 animate-pulse">
-        <div className="w-10 h-10 bg-white/5 rounded-xl mb-8" />
-        <div className="w-24 h-4 bg-white/5 rounded mb-2" />
-        <div className="w-32 h-8 bg-white/5 rounded" />
+      <div className="bg-[#0b0f1a] border border-white/5 rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 h-32 sm:h-40 animate-pulse">
+        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/5 rounded-lg mb-4 sm:mb-8" />
+        <div className="w-16 h-3 bg-white/5 rounded mb-2" />
+        <div className="w-24 h-6 bg-white/5 rounded" />
       </div>
     );
   }
 
   return (
     <div
-      className="bg-[#0b0f1a] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden group"
+      className="bg-[#0b0f1a] border border-white/5 rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden group"
     >
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-4 sm:mb-8">
         <div className={clsx(
-          "w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg",
+          "w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg",
           color === 'blue' ? "bg-blue-600 text-white" :
           color === 'green' ? "bg-emerald-600 text-white" :
           color === 'red' ? "bg-rose-600 text-white" : "bg-orange-600 text-white"
         )}>
-          <Icon size={24} />
+          <Icon size={20} className="sm:w-6 sm:h-6" />
         </div>
         {change && (
            <div className={clsx(
-             "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1",
+             "px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-widest flex items-center gap-0.5 sm:gap-1",
              change > 0 ? "bg-emerald-500/10 text-emerald-500" : "bg-rose-500/10 text-rose-500"
            )}>
-             {change > 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+             {change > 0 ? <ArrowUpRight size={10} className="sm:w-3 sm:h-3" /> : <ArrowDownRight size={10} className="sm:w-3 sm:h-3" />}
              {Math.abs(change)}%
            </div>
         )}
       </div>
 
       <div>
-        <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">{title}</p>
-        <h2 className="text-3xl font-black text-white tracking-tighter">
+        <p className="text-[8px] sm:text-[11px] font-black text-slate-500 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-0.5 sm:mb-1">{title}</p>
+        <h2 className="text-xl sm:text-3xl font-black text-white tracking-tighter">
           {typeof value === 'number' ? format(value) : (value || '---')}
         </h2>
       </div>
     </div>
   );
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 100,
+      damping: 12
+    }
+  }
 };
 
 const DashboardPage = () => {
@@ -156,27 +179,41 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col space-y-6 pb-12">
-      <div className="flex items-center justify-between">
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="flex-1 flex flex-col space-y-4 sm:space-y-6 pb-8 sm:pb-12"
+    >
+      <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-black text-white tracking-tight italic uppercase">Command Center</h1>
-          <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.1em] mt-0.5">Real-time operational telemetry</p>
+          <h1 className="text-lg sm:text-xl font-black text-white tracking-tight italic uppercase">Command Center</h1>
+          <p className="text-[8px] sm:text-[10px] text-slate-500 font-bold uppercase tracking-[0.1em] mt-0.5">Real-time operational telemetry</p>
         </div>
-        <div className="px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-xl text-[9px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-2">
-          <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" /> Live Status
+        <div className="px-2 py-1 sm:px-3 sm:py-1.5 bg-white/[0.03] border border-white/5 rounded-lg sm:rounded-xl text-[8px] sm:text-[9px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-1.5 sm:gap-2">
+          <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-emerald-500 rounded-full animate-pulse" /> Live Status
         </div>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <FintechCard title="Net Portfolio" value={data?.net_profit} icon={CreditCard} color={(data?.net_profit || 0) >= 0 ? "green" : "red"} data={data} isLoading={isLoading} />
-            <FintechCard title="Total Inflow" value={data?.total_income} change={12} icon={TrendingUp} color="green" data={data} isLoading={isLoading} />
-            <FintechCard title="Fuel Burn" value={data?.total_fuel_cost} change={-5} icon={Fuel} color="red" data={data} isLoading={isLoading} />
-            <FintechCard title="Active Assets" value={`${data?.total_vehicles || 0} Units`} icon={Car} color="orange" data={data} isLoading={isLoading} />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+        <div className="lg:col-span-12 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <motion.div variants={itemVariants}>
+              <FintechCard title="Net Portfolio" value={data?.net_profit} icon={CreditCard} color={(data?.net_profit || 0) >= 0 ? "green" : "red"} data={data} isLoading={isLoading} />
+            </motion.div>
+            <motion.div variants={itemVariants}>
+              <FintechCard title="Total Inflow" value={data?.total_income} change={12} icon={TrendingUp} color="green" data={data} isLoading={isLoading} />
+            </motion.div>
+            <motion.div variants={itemVariants}>
+              <FintechCard title="Fuel Burn" value={data?.total_fuel_cost} change={-5} icon={Fuel} color="red" data={data} isLoading={isLoading} />
+            </motion.div>
+            <motion.div variants={itemVariants}>
+              <FintechCard title="Active Assets" value={`${data?.total_vehicles || 0} Units`} icon={Car} color="orange" data={data} isLoading={isLoading} />
+            </motion.div>
         </div>
       </div>
 
       <motion.div
+        variants={itemVariants}
         animate={isAnalysisLoading ? { opacity: [0.5, 1, 0.5] } : { opacity: 1 }}
         transition={{ duration: 1.5, repeat: Infinity, enabled: isAnalysisLoading }}
         className={clsx(
@@ -210,15 +247,21 @@ const DashboardPage = () => {
       </motion.div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-        <div className="xl:col-span-8 flex flex-col space-y-4">
+        <motion.div variants={itemVariants} className="xl:col-span-8 flex flex-col space-y-4">
           <div className="bg-[#0b0f1a] border border-white/5 rounded-[2rem] p-6 shadow-sm overflow-hidden flex flex-col">
             <h2 className="text-sm font-black text-white uppercase tracking-widest mb-6 flex items-center gap-2">
               <Activity size={16} className="text-emerald-500" /> Recent Transactions
             </h2>
             <div className="space-y-4">
               {isLoading ? Array(5).fill(0).map((_, i) => <div key={i} className="h-12 bg-white/5 rounded-xl animate-pulse" />) :
-                data?.recent_transactions?.map((tx: any) => (
-                <div key={tx.id} className="flex items-center justify-between group">
+                data?.recent_transactions?.map((tx: any, idx: number) => (
+                <motion.div
+                  key={tx.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 + (idx * 0.05) }}
+                  className="flex items-center justify-between group"
+                >
                   <div className="flex items-center gap-4">
                     <div className={clsx(
                       "w-10 h-10 rounded-xl flex items-center justify-center",
@@ -244,19 +287,24 @@ const DashboardPage = () => {
                       <Trash2 size={14} />
                     </button>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="xl:col-span-4 flex flex-col space-y-4">
+        <motion.div variants={itemVariants} className="xl:col-span-4 flex flex-col space-y-4">
           <div className="bg-[#0b0f1a] border border-white/5 rounded-[2rem] p-6 shadow-sm">
              <h2 className="text-sm font-black text-white uppercase tracking-widest mb-6">Asset Health</h2>
              <div className="space-y-6">
                 {isLoading ? Array(3).fill(0).map((_, i) => <div key={i} className="h-10 bg-white/5 rounded-xl animate-pulse" />) :
-                  data?.status_distribution && Object.entries(data.status_distribution).map(([status, count]: any) => (
-                  <div key={status}>
+                  data?.status_distribution && Object.entries(data.status_distribution).map(([status, count]: any, idx: number) => (
+                  <motion.div
+                    key={status}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 + (idx * 0.1) }}
+                  >
                     <div className="flex justify-between items-end mb-2">
                       <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest capitalize">{status}</span>
                       <span className="text-xs font-black text-white">{count} Units</span>
@@ -265,13 +313,14 @@ const DashboardPage = () => {
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${data.total_vehicles > 0 ? (count / data.total_vehicles) * 100 : 0}%` }}
+                        transition={{ duration: 1, ease: "easeOut" }}
                         className={clsx(
                           "h-full rounded-full",
                           status === 'active' ? 'bg-emerald-500' : status === 'maintenance' ? 'bg-orange-500' : 'bg-rose-500'
                         )}
                       />
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
              </div>
              <div className="mt-10 pt-6 border-t border-white/5 flex items-center justify-between">
@@ -288,9 +337,9 @@ const DashboardPage = () => {
                 </div>
              </div>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

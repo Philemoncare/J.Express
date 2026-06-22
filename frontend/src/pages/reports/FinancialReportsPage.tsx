@@ -98,6 +98,29 @@ const CustomSelect = ({ value, onChange, options, label }: any) => {
     );
 };
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 100,
+      damping: 12
+    }
+  }
+};
+
 const FinancialReportsPage = () => {
   const queryClient = useQueryClient();
   const [currency, setCurrency] = useState('GHS');
@@ -280,9 +303,14 @@ const FinancialReportsPage = () => {
   if (isSummaryLoading && !summary) return <div className="flex-1 flex items-center justify-center"><Loader2 className="animate-spin text-emerald-600 h-5 w-5" /></div>;
 
   return (
-    <div className="flex-1 flex flex-col space-y-4">
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="flex-1 flex flex-col space-y-4"
+    >
       {/* Compact Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <h1 className="text-sm font-black text-white tracking-widest uppercase flex items-center gap-2">
            <div className="w-1 h-3 bg-emerald-500 rounded-sm" /> Financial Report
         </h1>
@@ -314,49 +342,49 @@ const FinancialReportsPage = () => {
               <Download size={14} /> EXPORT
             </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Financial Flow Formula (Visual for Layman) */}
-      <div className="bg-[#0b0f1a] border border-white/5 rounded-[2rem] p-6 shadow-2xl relative overflow-hidden">
+      <motion.div variants={itemVariants} className="bg-[#0b0f1a] border border-white/5 rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 shadow-2xl relative overflow-hidden">
         <div className="absolute inset-0 bg-emerald-500/[0.01] pointer-events-none" />
-        <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-8 text-center sm:text-left">Operational Cash Flow Breakdown</h3>
+        <h3 className="text-[8px] sm:text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4 sm:mb-8 text-center sm:text-left">Operational Cash Flow Breakdown</h3>
 
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-4">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-8 lg:gap-4">
             {/* Income */}
-            <div className="flex flex-col items-center text-center space-y-3 flex-1">
-                <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 border border-emerald-500/20">
-                    <TrendingUp size={24} />
+            <div className="flex flex-row lg:flex-col items-center lg:text-center gap-4 lg:space-y-3 flex-1 w-full lg:w-auto">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-500/10 rounded-xl sm:rounded-2xl flex items-center justify-center text-emerald-500 border border-emerald-500/20 shrink-0">
+                    <TrendingUp size={20} className="sm:w-6 sm:h-6" />
                 </div>
                 <div>
-                    <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Money Collected</p>
-                    <p className="text-2xl font-black text-white tracking-tighter mt-1">{formatValue(summary?.total_income || 0)}</p>
+                    <p className="text-[8px] sm:text-[9px] font-black text-slate-500 uppercase tracking-widest">Money Collected</p>
+                    <p className="text-lg sm:text-2xl font-black text-white tracking-tighter mt-0.5 sm:mt-1">{formatValue(summary?.total_income || 0)}</p>
                 </div>
             </div>
 
             <div className="text-slate-700 font-black text-2xl hidden lg:block">−</div>
-            <div className="w-8 h-0.5 bg-slate-800 lg:hidden" />
+            <div className="w-full h-px bg-white/5 lg:hidden" />
 
             {/* Deductions Group */}
-            <div className="flex flex-col sm:flex-row items-center gap-8 flex-1">
-                <div className="flex flex-col items-center text-center space-y-3">
-                    <div className="w-12 h-12 bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-500 border border-rose-500/20">
-                        <TrendingDown size={24} />
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 flex-1 w-full lg:w-auto">
+                <div className="flex flex-row sm:flex-col items-center sm:text-center gap-4 sm:space-y-3 w-full sm:w-auto">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-rose-500/10 rounded-xl sm:rounded-2xl flex items-center justify-center text-rose-500 border border-rose-500/20 shrink-0">
+                        <TrendingDown size={20} className="sm:w-6 sm:h-6" />
                     </div>
                     <div>
-                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">General Spent</p>
-                        <p className="text-xl font-black text-slate-300 tracking-tighter mt-1">{formatValue(summary?.total_expense || 0)}</p>
+                        <p className="text-[8px] sm:text-[9px] font-black text-slate-500 uppercase tracking-widest">General Spent</p>
+                        <p className="text-base sm:text-xl font-black text-slate-300 tracking-tighter mt-0.5 sm:mt-1">{formatValue(summary?.total_expense || 0)}</p>
                     </div>
                 </div>
 
                 <div className="text-slate-800 font-black text-xl hidden sm:block">+</div>
 
-                <div className="flex flex-col items-center text-center space-y-3">
-                    <div className="w-12 h-12 bg-orange-500/10 rounded-2xl flex items-center justify-center text-orange-500 border border-orange-500/20">
-                        <Fuel size={24} />
+                <div className="flex flex-row sm:flex-col items-center sm:text-center gap-4 sm:space-y-3 w-full sm:w-auto">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-500/10 rounded-xl sm:rounded-2xl flex items-center justify-center text-orange-500 border border-orange-500/20 shrink-0">
+                        <Fuel size={20} className="sm:w-6 sm:h-6" />
                     </div>
                     <div>
-                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Fuel Spending</p>
-                        <p className="text-xl font-black text-slate-300 tracking-tighter mt-1">{formatValue(summary?.total_fuel_cost || 0)}</p>
+                        <p className="text-[8px] sm:text-[9px] font-black text-slate-500 uppercase tracking-widest">Fuel Spending</p>
+                        <p className="text-base sm:text-xl font-black text-slate-300 tracking-tighter mt-0.5 sm:mt-1">{formatValue(summary?.total_fuel_cost || 0)}</p>
                     </div>
                 </div>
             </div>
@@ -365,17 +393,17 @@ const FinancialReportsPage = () => {
             <div className="w-full h-px bg-white/5 lg:hidden" />
 
             {/* Final Result */}
-            <div className="flex flex-col items-center text-center space-y-3 flex-1 bg-white/[0.02] border border-white/5 p-4 rounded-[1.5rem]">
+            <div className="flex flex-row lg:flex-col items-center lg:text-center gap-4 lg:space-y-3 flex-1 bg-white/[0.02] border border-white/5 p-3 sm:p-4 rounded-xl sm:rounded-[1.5rem] w-full lg:w-auto">
                 <div className={clsx(
-                    "w-14 h-14 rounded-2xl flex items-center justify-center border-2 shadow-2xl",
+                    "w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center border-2 shadow-2xl shrink-0",
                     (summary?.net_profit || 0) >= 0 ? "bg-emerald-600 text-white border-emerald-400 shadow-emerald-500/20" : "bg-rose-600 text-white border-rose-400 shadow-rose-500/20"
                 )}>
-                    <DollarSign size={28} />
+                    <DollarSign size={24} className="sm:w-7 sm:h-7" />
                 </div>
                 <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{ (summary?.net_profit || 0) >= 0 ? "Profit Remaining" : "Money Shortfall"}</p>
+                    <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] sm:tracking-[0.2em]">{ (summary?.net_profit || 0) >= 0 ? "Profit Remaining" : "Money Shortfall"}</p>
                     <p className={clsx(
-                        "text-3xl font-black tracking-tightest mt-1",
+                        "text-xl sm:text-3xl font-black tracking-tightest mt-0.5 sm:mt-1",
                         (summary?.net_profit || 0) >= 0 ? "text-emerald-400" : "text-rose-400"
                     )}>{formatValue(Math.abs(summary?.net_profit || 0))}</p>
                 </div>
@@ -385,7 +413,7 @@ const FinancialReportsPage = () => {
 
       {/* Intelligence Sector */}
       <div className="flex-1 grid grid-cols-1 xl:grid-cols-12 gap-4 min-h-0">
-        <div className="xl:col-span-8 flex flex-col gap-4">
+        <motion.div variants={itemVariants} className="xl:col-span-8 flex flex-col gap-4">
           <div className="bg-[#0b0f1a] border border-white/5 rounded-lg p-5 shadow-sm relative overflow-hidden group">
              <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-3">
@@ -453,31 +481,39 @@ const FinancialReportsPage = () => {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {analysis?.recommendations?.slice(0, 3).map((rec: string, i: number) => (
-                   <div key={i} className="p-4 bg-white/[0.01] border border-white/5 rounded-lg space-y-3">
+                   <motion.div
+                    key={i}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.4 + (i * 0.1) }}
+                    className="p-4 bg-white/[0.01] border border-white/5 rounded-lg space-y-3"
+                   >
                       <div className="w-7 h-7 rounded bg-emerald-600/10 flex items-center justify-center text-emerald-400 text-[11px] font-black">
                          {i + 1}
                       </div>
                       <p className="text-[11px] text-slate-400 font-medium leading-relaxed tracking-tight">{rec}</p>
-                   </div>
+                   </motion.div>
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="xl:col-span-4 flex flex-col gap-4">
+        <motion.div variants={itemVariants} className="xl:col-span-4 flex flex-col gap-4">
           <div className="bg-[#0b0f1a] border border-white/5 rounded-lg p-5 shadow-sm flex flex-col items-center">
             <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-5 w-full text-left">Money Kept</h3>
             <div className="relative flex items-center justify-center py-4">
                <svg className="w-40 h-40 -rotate-90">
                  <circle cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-white/[0.02]" />
-                 <circle
+                 <motion.circle
+                   initial={{ strokeDashoffset: 439.8 }}
+                   animate={{ strokeDashoffset: 439.8 - (439.8 * Math.max(0, Math.min(100, Number(analysis?.profit_margin) || 0)) / 100) }}
+                   transition={{ duration: 1.5, ease: "easeInOut" }}
                    cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="12" fill="transparent"
                    className={clsx(
                     analysis?.status_color === 'green' ? "text-emerald-500" :
                     analysis?.status_color === 'red' ? "text-rose-500" : "text-blue-500"
                    )}
                    strokeDasharray={439.8}
-                   strokeDashoffset={439.8 - (439.8 * Math.max(0, Math.min(100, Number(analysis?.profit_margin) || 0)) / 100)}
                    strokeLinecap="round"
                  />
                </svg>
@@ -495,8 +531,14 @@ const FinancialReportsPage = () => {
               <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Recent Activity</h3>
             </div>
             <div className="divide-y divide-white/[0.03]">
-               {summary?.recent_transactions?.slice(0, 10).map((tx: any) => (
-                 <div key={tx.id} className="px-5 py-3.5 flex items-center gap-4 hover:bg-white/[0.01] transition-colors group">
+               {summary?.recent_transactions?.slice(0, 10).map((tx: any, idx: number) => (
+                 <motion.div
+                    key={tx.id}
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 + (idx * 0.05) }}
+                    className="px-5 py-3.5 flex items-center gap-4 hover:bg-white/[0.01] transition-colors group"
+                 >
                     <div className={clsx(
                       "w-1 h-7 rounded-full",
                       tx.type === 'income' ? "bg-emerald-500" : "bg-rose-500"
@@ -516,11 +558,11 @@ const FinancialReportsPage = () => {
                           <Trash2 size={12} />
                         </button>
                     </div>
-                 </div>
+                 </motion.div>
                ))}
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Floating PiA Trigger - Refined Minimalist Pill */}

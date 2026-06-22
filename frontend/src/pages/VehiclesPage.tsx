@@ -5,7 +5,7 @@ import {
   Car, Plus, Search, Loader2,
   Trash2, Edit, ChevronLeft, ChevronRight
 } from 'lucide-react';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
 import { useNavigate } from 'react-router-dom';
 import VehicleForm from '@/components/vehicles/VehicleForm';
@@ -44,7 +44,11 @@ const VehiclesPage = () => {
   if (isLoading && page === 1) return <div className="flex-1 flex items-center justify-center"><Loader2 className="animate-spin text-blue-600 h-5 w-5" /></div>;
 
   return (
-    <div className="flex-1 flex flex-col space-y-4">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex-1 flex flex-col space-y-4"
+    >
       {/* 3D Asset Header */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
         <div className="md:col-span-8 flex flex-col justify-center">
@@ -116,9 +120,12 @@ const VehiclesPage = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {vehicles.map((v: any) => (
-                <tr
+              {vehicles.map((v: any, idx: number) => (
+                <motion.tr
                   key={v.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.03 }}
                   className="hover:bg-white/[0.01] transition-colors cursor-pointer group"
                   onClick={(e) => { if (!(e.target as HTMLElement).closest('button')) navigate(`/vehicles/${v.id}`); }}
                 >
@@ -160,9 +167,12 @@ const VehiclesPage = () => {
 
           {/* Mobile List View */}
           <div className="sm:hidden flex flex-col divide-y divide-white/5">
-            {vehicles.map((v: any) => (
-              <div
+            {vehicles.map((v: any, idx: number) => (
+              <motion.div
                 key={v.id}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: idx * 0.05 }}
                 className="p-4 space-y-4 bg-white/[0.01]"
                 onClick={() => navigate(`/vehicles/${v.id}`)}
               >

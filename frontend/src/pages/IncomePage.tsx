@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fleetApi } from '@/api/fleet';
 import { TrendingUp, Plus, Loader2, Trash2 } from 'lucide-react';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import IncomeForm from '@/components/income/IncomeForm';
 import { toast } from 'react-hot-toast';
 
@@ -52,7 +52,11 @@ const IncomePage = () => {
   }).format(val);
 
   return (
-    <div className="flex-1 flex flex-col space-y-4">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex-1 flex flex-col space-y-4"
+    >
       {/* Action Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <h1 className="text-[10px] sm:text-xs font-black text-white tracking-[0.2em] uppercase italic flex items-center gap-2">
@@ -89,8 +93,14 @@ const IncomePage = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {incomes?.map((income: any) => (
-                <tr key={income.id} className="hover:bg-white/[0.01] transition-colors group">
+              {incomes?.map((income: any, idx: number) => (
+                <motion.tr
+                  key={income.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.03 }}
+                  className="hover:bg-white/[0.01] transition-colors group"
+                >
                   <td className="px-4 py-2.5">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">
                       {new Date(income.date).toLocaleDateString()}
@@ -130,8 +140,14 @@ const IncomePage = () => {
 
           {/* Mobile List View */}
           <div className="sm:hidden flex flex-col divide-y divide-white/5">
-            {incomes?.map((income: any) => (
-              <div key={income.id} className="p-4 space-y-3 bg-white/[0.01] relative">
+            {incomes?.map((income: any, idx: number) => (
+              <motion.div
+                key={income.id}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: idx * 0.05 }}
+                className="p-4 space-y-3 bg-white/[0.01] relative"
+              >
                 <div className="flex justify-between items-start">
                    <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/10">
