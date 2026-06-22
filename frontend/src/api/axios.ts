@@ -1,7 +1,14 @@
 import axios from 'axios';
 
 const getBaseURL = () => {
-  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  let url = import.meta.env.VITE_API_URL;
+
+  if (url) {
+    // Ensure URL ends with /api if it's missing, making it bulletproof
+    return url.endsWith('/api') || url.endsWith('/api/')
+      ? url
+      : `${url.replace(/\/+$/, '')}/api`;
+  }
 
   // Auto-detect backend if running on Vercel or same host
   const host = window.location.hostname;
