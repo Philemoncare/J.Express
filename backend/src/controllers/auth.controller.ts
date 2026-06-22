@@ -20,8 +20,8 @@ const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'josephotoo774@gmail.com').toLow
  */
 const cookieOptions: any = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: true, // Always true for cross-site cookies
+    sameSite: 'none', // Required for cross-domain Vercel setup
     path: '/',
 };
 
