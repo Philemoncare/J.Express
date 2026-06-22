@@ -23,7 +23,7 @@ const getBaseURL = () => {
 };
 
 const api = axios.create({
-  baseURL: getBaseURL().replace(/\/+$/, ''), // Remove all trailing slashes
+  baseURL: getBaseURL().replace(/\/+$/, '') + '/', // Always end with exactly one slash
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

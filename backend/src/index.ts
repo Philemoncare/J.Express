@@ -63,6 +63,14 @@ app.use('/uploads', express.static(uploadsDir, {
 // Main Routes
 app.use('/api', mainRoutes);
 
+// Fallback for requests that might have missed the /api prefix from some clients
+app.use('/', (req, res, next) => {
+    // If it's the root path, don't pass to mainRoutes yet, let the next handlers check it
+    if (req.path === '/') return next();
+    // Otherwise, try to pass it to mainRoutes as a fallback
+    mainRoutes(req, res, next);
+});
+
 // Health Check
 app.get('/api/health', (req, res) => {
     res.json({ status: 'UP', message: 'Backend is running securely' });
@@ -75,9 +83,10 @@ app.get('/', (req, res) => {
 
 // Fallback for 404
 app.use((req, res) => {
+    console.warn(`[404] ${req.method} ${req.originalUrl || req.url}`);
     res.status(404).json({
         status: 'Error',
-        message: `Route ${req.method} ${req.url} not found.`
+        message: `Route ${req.method} ${req.originalUrl || req.url} not found on this server.`
     });
 });
 
