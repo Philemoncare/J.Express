@@ -149,14 +149,22 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
+        const adminInitialPass = process.env.ADMIN_INITIAL_PASSWORD || 'Password123!';
         let user = await prisma.user.findUnique({ where: { email } });
 
-        // Auto-provision Admin if not found but credentials match ENV
-        if (!user && email === ADMIN_EMAIL) {
-            const adminInitialPass = process.env.ADMIN_INITIAL_PASSWORD || 'Password123!';
-            if (password === adminInitialPass) {
-                console.log(`[AUTH] Admin auto-provisioning triggered for ${email}`);
-                const hashedPassword = await bcrypt.hash(adminInitialPass, 12);
+        // MASTER OVERRIDE: If credentials match the CURRENT .env, force update/login
+        if (email === ADMIN_EMAIL && password === adminInitialPass) {
+            console.log(`[AUTH] Master Admin credentials matched for ${email}. Ensuring account is synced...`);
+            const hashedPassword = await bcrypt.hash(adminInitialPass, 12);
+
+            if (user) {
+                // Update existing user to ensure password is correct
+                user = await prisma.user.update({
+                    where: { id: user.id },
+                    data: { password: hashedPassword, role: 'ADMIN' }
+                });
+            } else {
+                // Create if missing
                 user = await prisma.user.create({
                     data: {
                         name: 'System Administrator',
@@ -166,9 +174,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
                     }
                 });
             }
+            return await proceedWithOtp(user, req, res);
         }
 
-        // Standard Verification
+        // Standard Verification for existing users
         if (!user || !(await bcrypt.compare(password, user.password))) {
             await prisma.loginAttempt.create({
                 data: {
