@@ -134,7 +134,7 @@ const FuelPage = () => {
                       <Trash2 size={14} />
                     </button>
                   </td>
-                </tr>
+                </motion.tr>
               ))}
             </tbody>
           </table>
@@ -180,7 +180,7 @@ const FuelPage = () => {
                       <p className="text-[11px] font-black text-slate-300">{Number(log.odometerReading).toLocaleString()} <span className="text-[8px] uppercase">KM</span></p>
                    </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

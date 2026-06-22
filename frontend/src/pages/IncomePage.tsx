@@ -133,7 +133,7 @@ const IncomePage = () => {
                       <Trash2 size={14} />
                     </button>
                   </td>
-                </tr>
+                </motion.tr>
               ))}
             </tbody>
           </table>
@@ -178,7 +178,7 @@ const IncomePage = () => {
                       <p className="text-[9px] font-black font-mono text-emerald-500/50 tracking-widest mt-2">{income.vehicle?.plateNumber}</p>
                    </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

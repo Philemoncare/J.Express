@@ -83,7 +83,10 @@ const LoginPage = () => {
       onError: (err: any) => {
         console.error('Login Error:', err);
         const apiBase = api.defaults.baseURL;
-        const msg = err.response?.data?.message || (err.code === 'ERR_NETWORK' ? `Connection Failed: System Offline at ${apiBase}` : 'Invalid Credentials');
+        const msg = err.response?.data?.message ||
+          (err.code === 'ERR_NETWORK'
+            ? `System Offline. Accessing via ${window.location.hostname}. Please verify backend is running on port 8080.`
+            : 'Invalid Credentials');
         triggerError(msg);
       }
     });

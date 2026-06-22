@@ -29,41 +29,41 @@ const FintechCard = ({ title, value, change, icon: Icon, color, data, isLoading 
 
   if (isLoading) {
     return (
-      <div className="bg-[#0b0f1a] border border-white/5 rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 h-32 sm:h-40 animate-pulse">
-        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/5 rounded-lg mb-4 sm:mb-8" />
-        <div className="w-16 h-3 bg-white/5 rounded mb-2" />
-        <div className="w-24 h-6 bg-white/5 rounded" />
+      <div className="bg-[#0b0f1a] border border-white/5 rounded-2xl p-4 h-28 sm:h-40 animate-pulse">
+        <div className="w-8 h-8 bg-white/5 rounded-lg mb-3 sm:mb-8" />
+        <div className="w-16 h-2.5 bg-white/5 rounded mb-2" />
+        <div className="w-24 h-5 bg-white/5 rounded" />
       </div>
     );
   }
 
   return (
     <div
-      className="bg-[#0b0f1a] border border-white/5 rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden group"
+      className="bg-[#0b0f1a] border border-white/5 rounded-2xl p-4 sm:p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden group min-h-[110px] sm:min-h-[160px]"
     >
-      <div className="flex items-center justify-between mb-4 sm:mb-8">
+      <div className="flex items-center justify-between mb-2 sm:mb-8">
         <div className={clsx(
-          "w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg",
+          "w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg",
           color === 'blue' ? "bg-blue-600 text-white" :
           color === 'green' ? "bg-emerald-600 text-white" :
           color === 'red' ? "bg-rose-600 text-white" : "bg-orange-600 text-white"
         )}>
-          <Icon size={20} className="sm:w-6 sm:h-6" />
+          <Icon size={18} className="sm:w-6 sm:h-6" />
         </div>
         {change && (
            <div className={clsx(
-             "px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-widest flex items-center gap-0.5 sm:gap-1",
+             "px-2 py-0.5 rounded-full text-[7px] sm:text-[10px] font-black uppercase tracking-widest flex items-center gap-0.5",
              change > 0 ? "bg-emerald-500/10 text-emerald-500" : "bg-rose-500/10 text-rose-500"
            )}>
-             {change > 0 ? <ArrowUpRight size={10} className="sm:w-3 sm:h-3" /> : <ArrowDownRight size={10} className="sm:w-3 sm:h-3" />}
+             {change > 0 ? <ArrowUpRight size={8} /> : <ArrowDownRight size={8} />}
              {Math.abs(change)}%
            </div>
         )}
       </div>
 
       <div>
-        <p className="text-[8px] sm:text-[11px] font-black text-slate-500 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-0.5 sm:mb-1">{title}</p>
-        <h2 className="text-xl sm:text-3xl font-black text-white tracking-tighter">
+        <p className="text-[7px] sm:text-[11px] font-black text-slate-500 uppercase tracking-[0.1em] sm:tracking-[0.2em] mb-0.5 sm:mb-1">{title}</p>
+        <h2 className="text-lg sm:text-3xl font-black text-white tracking-tighter truncate">
           {typeof value === 'number' ? format(value) : (value || '---')}
         </h2>
       </div>

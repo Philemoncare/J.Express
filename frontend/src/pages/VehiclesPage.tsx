@@ -160,7 +160,7 @@ const VehiclesPage = () => {
                       <button onClick={() => { if (window.confirm('Delete Asset?')) deleteMutation.mutate(v.id); }} className="p-1 text-slate-500 hover:text-rose-400"><Trash2 size={12} /></button>
                     </div>
                   </td>
-                </tr>
+                </motion.tr>
               ))}
             </tbody>
           </table>
@@ -219,7 +219,7 @@ const VehiclesPage = () => {
                         <Trash2 size={12} /> Delete
                     </button>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
