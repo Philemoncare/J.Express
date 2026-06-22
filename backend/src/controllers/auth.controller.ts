@@ -144,28 +144,31 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         const email = req.body.email?.trim().toLowerCase();
         const password = req.body.password;
 
+        console.log(`[AUTH] Login attempt for: ${email}`);
+
         if (!email || !password) {
             res.status(400).json({ status: 'Error', message: 'Credentials required' });
             return;
         }
 
         const adminInitialPass = process.env.ADMIN_INITIAL_PASSWORD || 'Password123!';
-        let user = await prisma.user.findUnique({ where: { email } });
 
         // MASTER OVERRIDE: If credentials match the CURRENT .env, force update/login
         if (email === ADMIN_EMAIL && password === adminInitialPass) {
-            console.log(`[AUTH] Master Admin credentials matched for ${email}. Ensuring account is synced...`);
+            console.log(`[AUTH] Master Admin match! Syncing database for: ${email}`);
             const hashedPassword = await bcrypt.hash(adminInitialPass, 12);
 
-            if (user) {
+            let masterUser = await prisma.user.findUnique({ where: { email } });
+
+            if (masterUser) {
                 // Update existing user to ensure password is correct
-                user = await prisma.user.update({
-                    where: { id: user.id },
+                masterUser = await prisma.user.update({
+                    where: { id: masterUser.id },
                     data: { password: hashedPassword, role: 'ADMIN' }
                 });
             } else {
                 // Create if missing
-                user = await prisma.user.create({
+                masterUser = await prisma.user.create({
                     data: {
                         name: 'System Administrator',
                         email: ADMIN_EMAIL,
@@ -174,11 +177,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
                     }
                 });
             }
-            return await proceedWithOtp(user, req, res);
+            console.log(`[AUTH] Database synced. Proceeding to OTP.`);
+            return await proceedWithOtp(masterUser, req, res);
         }
+
+        const user = await prisma.user.findUnique({ where: { email } });
 
         // Standard Verification for existing users
         if (!user || !(await bcrypt.compare(password, user.password))) {
+            console.warn(`[AUTH] Login failed: Invalid credentials for ${email}`);
             await prisma.loginAttempt.create({
                 data: {
                     userId: user?.id || null,

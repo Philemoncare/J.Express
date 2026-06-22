@@ -99,16 +99,14 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
     });
 });
 
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(Number(PORT), '0.0.0.0', async () => {
-        console.log(`🚀 Secure Fleet API running on port ${PORT}`);
-        try {
-            await prisma.$connect();
-            console.log('✅ Database connected');
-        } catch (error: any) {
-            console.error('❌ Database connection failed:', error.message);
-        }
-    });
-}
+app.listen(Number(PORT), '0.0.0.0', async () => {
+    console.log(`🚀 Secure Fleet API running on port ${PORT}`);
+    try {
+        await prisma.$connect();
+        console.log('✅ Database connected');
+    } catch (error: any) {
+        console.error('❌ Database connection failed:', error.message);
+    }
+});
 
 export default app;
