@@ -144,41 +144,38 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         const email = req.body.email?.trim().toLowerCase();
         const password = req.body.password;
 
-        console.log(`[AUTH] Login attempt for: ${email}`);
+        console.log(`[AUTH] Login attempt: Email="${email}", Password length=${password?.length}`);
 
         if (!email || !password) {
             res.status(400).json({ status: 'Error', message: 'Credentials required' });
             return;
         }
 
-        const adminInitialPass = process.env.ADMIN_INITIAL_PASSWORD || 'Password123!';
+        const envAdminEmail = (process.env.ADMIN_EMAIL || 'josephotoo774@gmail.com').toLowerCase();
+        const envAdminPass = process.env.ADMIN_INITIAL_PASSWORD || 'Password123!';
 
-        // MASTER OVERRIDE: If credentials match the CURRENT .env, force update/login
-        if (email === ADMIN_EMAIL && password === adminInitialPass) {
-            console.log(`[AUTH] Master Admin match! Syncing database for: ${email}`);
-            const hashedPassword = await bcrypt.hash(adminInitialPass, 12);
+        // MASTER OVERRIDE: Direct string comparison first
+        if (email === envAdminEmail && password === envAdminPass) {
+            console.log(`[AUTH] MASTER MATCH! Credentials match .env precisely.`);
+            const hashedPassword = await bcrypt.hash(envAdminPass, 12);
 
-            let masterUser = await prisma.user.findUnique({ where: { email } });
-
-            if (masterUser) {
-                // Update existing user to ensure password is correct
-                masterUser = await prisma.user.update({
-                    where: { id: masterUser.id },
+            let user = await prisma.user.findUnique({ where: { email } });
+            if (user) {
+                user = await prisma.user.update({
+                    where: { id: user.id },
                     data: { password: hashedPassword, role: 'ADMIN' }
                 });
             } else {
-                // Create if missing
-                masterUser = await prisma.user.create({
+                user = await prisma.user.create({
                     data: {
                         name: 'System Administrator',
-                        email: ADMIN_EMAIL,
+                        email: envAdminEmail,
                         password: hashedPassword,
                         role: 'ADMIN'
                     }
                 });
             }
-            console.log(`[AUTH] Database synced. Proceeding to OTP.`);
-            return await proceedWithOtp(masterUser, req, res);
+            return await proceedWithOtp(user, req, res);
         }
 
         const user = await prisma.user.findUnique({ where: { email } });
