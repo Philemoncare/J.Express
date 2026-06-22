@@ -40,10 +40,17 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
-// Ensure uploads directory exists
+// Ensure uploads directory exists (Safe for Serverless)
 const uploadsDir = path.join(__dirname, '../uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
+try {
+    if (!fs.existsSync(uploadsDir)) {
+        // We only try to create it, but don't fail if we can't (Vercel is read-only)
+        if (process.env.NODE_ENV !== 'production') {
+            fs.mkdirSync(uploadsDir, { recursive: true });
+        }
+    }
+} catch (e) {
+    console.warn('Uploads directory creation skipped or failed');
 }
 
 // ensure static files are reachable
