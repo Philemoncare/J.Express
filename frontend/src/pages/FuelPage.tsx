@@ -195,7 +195,7 @@ const FuelPage = () => {
           />
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
 

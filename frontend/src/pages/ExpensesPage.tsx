@@ -214,7 +214,7 @@ const ExpensesPage = () => {
           />
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
 

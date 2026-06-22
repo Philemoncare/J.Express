@@ -193,7 +193,7 @@ const IncomePage = () => {
           />
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
 

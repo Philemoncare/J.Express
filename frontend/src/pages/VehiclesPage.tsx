@@ -243,7 +243,7 @@ const VehiclesPage = () => {
           />
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
 

@@ -409,7 +409,7 @@ const FinancialReportsPage = () => {
                 </div>
             </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Intelligence Sector */}
       <div className="flex-1 grid grid-cols-1 xl:grid-cols-12 gap-4 min-h-0">
@@ -583,7 +583,7 @@ const FinancialReportsPage = () => {
         onClose={() => setIsTerminalOpen(false)}
         currency={currency}
       />
-    </div>
+    </motion.div>
   );
 };
 
