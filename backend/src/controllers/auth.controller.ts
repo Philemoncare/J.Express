@@ -149,36 +149,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        if (email !== ADMIN_EMAIL) {
-            res.status(401).json({ status: 'Error', message: 'Invalid credentials' });
-            return;
-        }
+        let user = await prisma.user.findUnique({ where: { email } });
 
-        const user = await prisma.user.findUnique({ where: { email } });
-
-        // Standard Login Verification
-        if (user) {
-            if (!(await bcrypt.compare(password, user.password))) {
-                await prisma.loginAttempt.create({
-                    data: {
-                        userId: user.id,
-                        ipAddress: req.ip,
-                        deviceInfo: req.headers['user-agent'] || 'Unknown',
-                        status: 'FAILED'
-                    }
-                });
-                res.status(401).json({ status: 'Error', message: 'Invalid credentials' });
-                return;
-            }
-        } else {
-            // If user not found, check if this is the initial Admin setup attempt
+        // Auto-provision Admin if not found but credentials match ENV
+        if (!user && email === ADMIN_EMAIL) {
             const adminInitialPass = process.env.ADMIN_INITIAL_PASSWORD || 'Password123!';
-
-            if (email === ADMIN_EMAIL && password === adminInitialPass) {
-                // Auto-provision Admin on first successful match of ENV variables
-                console.log(`[AUTH] First-time login detected for Admin. Auto-provisioning account...`);
+            if (password === adminInitialPass) {
+                console.log(`[AUTH] Admin auto-provisioning triggered for ${email}`);
                 const hashedPassword = await bcrypt.hash(adminInitialPass, 12);
-                const newUser = await prisma.user.create({
+                user = await prisma.user.create({
                     data: {
                         name: 'System Administrator',
                         email: ADMIN_EMAIL,
@@ -186,14 +165,24 @@ export const login = async (req: Request, res: Response): Promise<void> => {
                         role: 'ADMIN'
                     }
                 });
-                // Fall through to OTP generation
-                return await proceedWithOtp(newUser, req, res);
             }
+        }
 
+        // Standard Verification
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+            await prisma.loginAttempt.create({
+                data: {
+                    userId: user?.id || null,
+                    ipAddress: req.ip,
+                    deviceInfo: req.headers['user-agent'] || 'Unknown',
+                    status: 'FAILED'
+                }
+            });
             res.status(401).json({ status: 'Error', message: 'Invalid credentials' });
             return;
         }
 
+        // Proceed to OTP
         return await proceedWithOtp(user, req, res);
     } catch (error) {
         console.error('Login Error:', error);
