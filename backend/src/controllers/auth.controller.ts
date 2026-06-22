@@ -49,6 +49,94 @@ const generateTokens = (user: any) => {
 };
 
 /**
+ * Register - Create a new user (Note: In this specific system, registration might be restricted)
+ */
+export const register = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { name, email, password } = req.body;
+
+        if (!name || !email || !password) {
+            res.status(400).json({ status: 'Error', message: 'All fields are required' });
+            return;
+        }
+
+        const existingUser = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
+        if (existingUser) {
+            res.status(400).json({ status: 'Error', message: 'User already exists' });
+            return;
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 12);
+        await prisma.user.create({
+            data: {
+                name,
+                email: email.toLowerCase(),
+                password: hashedPassword,
+                role: 'ADMIN' // Defaulting to ADMIN for this specific fleet system
+            }
+        });
+
+        res.status(201).json({
+            status: 'Success',
+            message: 'Account created successfully. You can now login.'
+        });
+    } catch (error) {
+        console.error('Registration Error:', error);
+        res.status(500).json({ status: 'Error', message: 'Registration failed' });
+    }
+};
+
+/**
+ * Request Access - For new users to request account activation
+ */
+export const requestAccess = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { name, email, company, message } = req.body;
+
+        if (!name || !email) {
+            res.status(400).json({ status: 'Error', message: 'Name and email are required' });
+            return;
+        }
+
+        // Log the request (In a real app, this would save to DB or notify admin)
+        console.log(`[ACCESS REQUEST] From: ${name} (${email}), Company: ${company}, Message: ${message}`);
+
+        // Optional: Send email to admin
+        await EmailService.sendSimpleEmail(
+            ADMIN_EMAIL,
+            'New Access Request',
+            `User ${name} (${email}) from ${company} has requested access.\n\nMessage: ${message}`
+        );
+
+        res.status(200).json({
+            status: 'Success',
+            message: 'Your request has been received. Our team will contact you soon.'
+        });
+    } catch (error) {
+        console.error('Request Access Error:', error);
+        res.status(500).json({ status: 'Error', message: 'Failed to process request' });
+    }
+};
+
+/**
+ * Google Login - Placeholder for OAuth integration
+ */
+export const googleLogin = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { idToken } = req.body;
+        if (!idToken) {
+            res.status(400).json({ status: 'Error', message: 'Google ID token required' });
+            return;
+        }
+
+        // This is a placeholder. Real implementation would use google-auth-library
+        res.status(501).json({ status: 'Error', message: 'Google Login not yet fully implemented on backend' });
+    } catch (error) {
+        res.status(500).json({ status: 'Error', message: 'Google authentication failed' });
+    }
+};
+
+/**
  * Login - Unified Secure Login with OTP
  */
 export const login = async (req: Request, res: Response): Promise<void> => {

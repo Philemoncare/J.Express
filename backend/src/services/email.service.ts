@@ -243,3 +243,19 @@ export const sendWelcomeEmail = async (email: string, name: string) => {
         console.error('❌ Failed to send welcome email:', error);
     }
 };
+
+export const sendSimpleEmail = async (to: string, subject: string, text: string) => {
+    const mailOptions = {
+        from: `"J.Express System" <${process.env.SMTP_FROM || 'system@jexpress.com'}>`,
+        to,
+        subject,
+        text
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log(`✅ Simple email sent to ${to}`);
+    } catch (error) {
+        console.error('❌ Failed to send simple email:', error);
+    }
+};

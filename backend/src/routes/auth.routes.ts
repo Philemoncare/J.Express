@@ -6,6 +6,9 @@ import { passwordChangeLimiter, authLimiter } from '../middleware/rateLimit.midd
 const router = Router();
 
 // Public routes
+router.post('/register', AuthController.register);
+router.post('/request-access', AuthController.requestAccess);
+router.post('/google-login', AuthController.googleLogin);
 router.post('/login', authLimiter, AuthController.login);
 router.post('/resend-otp', authLimiter, AuthController.resendOtp);
 router.post('/verify-otp', authLimiter, AuthController.verifyOtp);
