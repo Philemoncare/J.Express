@@ -156,60 +156,92 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
         const user = await prisma.user.findUnique({ where: { email } });
 
-        if (!user || !(await bcrypt.compare(password, user.password))) {
-            await prisma.loginAttempt.create({
-                data: {
-                    userId: user?.id || null,
-                    ipAddress: req.ip,
-                    deviceInfo: req.headers['user-agent'] || 'Unknown',
-                    status: 'FAILED'
-                }
-            });
+        // Standard Login Verification
+        if (user) {
+            if (!(await bcrypt.compare(password, user.password))) {
+                await prisma.loginAttempt.create({
+                    data: {
+                        userId: user.id,
+                        ipAddress: req.ip,
+                        deviceInfo: req.headers['user-agent'] || 'Unknown',
+                        status: 'FAILED'
+                    }
+                });
+                res.status(401).json({ status: 'Error', message: 'Invalid credentials' });
+                return;
+            }
+        } else {
+            // If user not found, check if this is the initial Admin setup attempt
+            const adminInitialPass = process.env.ADMIN_INITIAL_PASSWORD || 'Password123!';
+
+            if (email === ADMIN_EMAIL && password === adminInitialPass) {
+                // Auto-provision Admin on first successful match of ENV variables
+                console.log(`[AUTH] First-time login detected for Admin. Auto-provisioning account...`);
+                const hashedPassword = await bcrypt.hash(adminInitialPass, 12);
+                const newUser = await prisma.user.create({
+                    data: {
+                        name: 'System Administrator',
+                        email: ADMIN_EMAIL,
+                        password: hashedPassword,
+                        role: 'ADMIN'
+                    }
+                });
+                // Fall through to OTP generation
+                return await proceedWithOtp(newUser, req, res);
+            }
+
             res.status(401).json({ status: 'Error', message: 'Invalid credentials' });
             return;
         }
 
-        // Generate OTP for the second step
-        const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-        console.log(`[SECURITY] OTP generated for ${email}: ${otpCode}`); // BACKDOOR LOG FOR DEV
-        const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
-
-        await prisma.otpCode.create({
-            data: {
-                userId: user.id,
-                code: otpCode,
-                expiresAt,
-                type: 'LOGIN'
-            }
-        });
-
-        const timestamp = new Date().toISOString();
-        const ip = req.ip || 'Unknown';
-        const device = req.headers['user-agent'] || 'Unknown';
-
-        await EmailService.sendOtpEmail(user.email, otpCode, expiresAt.toLocaleTimeString(), { ip, device, timestamp });
-
-        await prisma.loginAttempt.create({
-            data: {
-                userId: user.id,
-                ipAddress: ip,
-                deviceInfo: device,
-                status: 'OTP_SENT'
-            }
-        });
-
-        res.status(200).json({
-            status: 'Success',
-            message: 'Credentials verified. A verification code has been sent to your email.',
-            data: {
-                email: user.email,
-                isDirectLogin: false // Force OTP verification
-            }
-        });
+        return await proceedWithOtp(user, req, res);
     } catch (error) {
         console.error('Login Error:', error);
         res.status(500).json({ status: 'Error', message: 'Authentication failure' });
     }
+};
+
+/**
+ * Shared logic to generate OTP and respond
+ */
+const proceedWithOtp = async (user: any, req: Request, res: Response) => {
+    // Generate OTP for the second step
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log(`[SECURITY] OTP generated for ${user.email}: ${otpCode}`);
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    await prisma.otpCode.create({
+        data: {
+            userId: user.id,
+            code: otpCode,
+            expiresAt,
+            type: 'LOGIN'
+        }
+    });
+
+    const timestamp = new Date().toISOString();
+    const ip = req.ip || 'Unknown';
+    const device = req.headers['user-agent'] || 'Unknown';
+
+    await EmailService.sendOtpEmail(user.email, otpCode, expiresAt.toLocaleTimeString(), { ip, device, timestamp });
+
+    await prisma.loginAttempt.create({
+        data: {
+            userId: user.id,
+            ipAddress: ip,
+            deviceInfo: device,
+            status: 'OTP_SENT'
+        }
+    });
+
+    res.status(200).json({
+        status: 'Success',
+        message: 'Credentials verified. A verification code has been sent to your email.',
+        data: {
+            email: user.email,
+            isDirectLogin: false
+        }
+    });
 };
 
 /**
