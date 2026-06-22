@@ -1,9 +1,22 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:8080/api`;
+const getBaseURL = () => {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+
+  // Auto-detect backend if running on Vercel or same host
+  const host = window.location.hostname;
+  if (host.includes('vercel.app') || host.includes('localhost') || host.includes('10.')) {
+      // If we are on HTTPS (Vercel), we should call HTTPS.
+      // If we are on port 3000 (Vite), we usually call 8080.
+      const protocol = window.location.protocol;
+      const port = host.includes('localhost') || host.match(/^\d+\./) ? ':8080' : '';
+      return `${protocol}//${host}${port}/api`;
+  }
+  return `http://${host}:8080/api`;
+};
 
 const api = axios.create({
-  baseURL: baseURL.replace(/\/+$/, ''), // Remove all trailing slashes
+  baseURL: getBaseURL().replace(/\/+$/, ''), // Remove all trailing slashes
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
