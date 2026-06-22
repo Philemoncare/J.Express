@@ -165,6 +165,21 @@ export const useAuth = () => {
     }
   });
 
+  const registerMutation = useMutation({
+    mutationFn: async (userData: any) => {
+      const { data } = await api.post('register', userData);
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || 'Account created successfully!');
+      navigate('/login');
+    },
+    onError: (error: any) => {
+      const msg = error.response?.data?.message || 'Registration failed';
+      toast.error(msg);
+    },
+  });
+
   const fetchLoginAttempts = async () => {
     const { data } = await api.get('login-attempts');
     return data.data;
@@ -194,7 +209,8 @@ export const useAuth = () => {
     deleteProfileImage: deleteProfileImage.mutate,
     changePassword: changePasswordMutation.mutate,
     requestAccess: requestAccessMutation.mutate,
-    isLoggingIn: loginMutation.isLoading,
+    register: registerMutation.mutate,
+    isLoggingIn: loginMutation.isLoading || registerMutation.isLoading,
     isResending: resendOtpMutation.isLoading,
     isVerifying: verifyOtpMutation.isLoading,
     isGoogleLoggingIn: googleLoginMutation.isLoading,

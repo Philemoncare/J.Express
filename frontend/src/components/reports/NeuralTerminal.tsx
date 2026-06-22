@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Cpu, Send, X, Loader2, Terminal as TerminalIcon, TrendingUp, TrendingDown, Fuel, PieChart, BarChart, Sparkles } from 'lucide-react';
+import { Cpu, Send, X, Loader2, Terminal as TerminalIcon, TrendingUp, TrendingDown, Fuel, PieChart, BarChart, Sparkles, Activity } from 'lucide-react';
 import { fleetApi } from '@/api/fleet';
 import { clsx } from 'clsx';
 import { toast } from 'react-hot-toast';
