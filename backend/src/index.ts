@@ -61,6 +61,11 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'UP', message: 'Backend is running securely' });
 });
 
+// Root Route for Vercel
+app.get('/', (req, res) => {
+    res.json({ status: 'UP', message: 'J.Express API Core' });
+});
+
 // Fallback for 404
 app.use((req, res) => {
     res.status(404).json({
