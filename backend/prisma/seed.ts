@@ -16,7 +16,7 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
     console.log('Start seeding secure admin user...');
 
-    const adminEmail = (process.env.ADMIN_EMAIL || 'favmoms440@gmail.com').toLowerCase();
+    const adminEmail = (process.env.ADMIN_EMAIL || 'josephotoo774@gmail.com').toLowerCase();
     const adminPassword = await bcrypt.hash(process.env.ADMIN_INITIAL_PASSWORD || 'Password123!', 10);
 
     // Ensure only ONE admin exists

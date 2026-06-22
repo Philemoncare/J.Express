@@ -35,14 +35,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
 }));
 
-// 4. Rate Limiting - Disabled for Dev Diagnostics
-const limiter = (req: any, res: any, next: any) => next();
-const authLimiter = (req: any, res: any, next: any) => next();
-
-app.use('/api/', limiter);
-app.use('/api/login', authLimiter);
-app.use('/api/google-login', authLimiter);
-
+// 4. Rate Limiting - Configuration is handled in specific routes
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());

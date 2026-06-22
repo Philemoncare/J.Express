@@ -2,8 +2,7 @@ import nodemailer from 'nodemailer';
 import path from 'path';
 
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.mailtrap.io',
-    port: parseInt(process.env.SMTP_PORT || '2525'),
+    service: 'gmail',
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
@@ -178,7 +177,7 @@ export const sendPasswordResetEmail = async (email: string, otp: string, expires
 };
 
 export const sendWelcomeEmail = async (email: string, name: string) => {
-    const welcomeImagePath = path.join(__dirname, '../../../../public/images/Person Using Tablet Next to a Car in 3D Style.jpg');
+    const welcomeImagePath = path.join(__dirname, '../../../frontend/public/images/Person Using Tablet Next to a Car in 3D Style.jpg');
 
     const mailOptions = {
         from: `"J.Express" <${process.env.SMTP_FROM || 'welcome@jexpress.com'}>`,
@@ -215,7 +214,7 @@ export const sendWelcomeEmail = async (email: string, name: string) => {
                     </div>
 
                     <!-- Modern Action Button -->
-                    <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}" style="display: block; background-color: #10b981; color: #ffffff; text-decoration: none; padding: 16px; border-radius: 18px; font-weight: 700; font-size: 16px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);">
+                    <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}" style="display: block; background-color: #10b981; color: #ffffff; text-decoration: none; padding: 16px; border-radius: 18px; font-weight: 700; font-size: 16px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);">
                         Launch Dashboard
                     </a>
 

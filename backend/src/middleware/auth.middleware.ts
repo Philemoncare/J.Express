@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import prisma from '../utils/prisma';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key_change_this';
-const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'favmoms440@gmail.com').toLowerCase();
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'josephotoo774@gmail.com').toLowerCase();
 
 export interface AuthRequest extends Request {
     user?: any;

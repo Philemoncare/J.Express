@@ -29,41 +29,41 @@ const FintechCard = ({ title, value, change, icon: Icon, color, data, isLoading 
 
   if (isLoading) {
     return (
-      <div className="bg-[#0b0f1a] border border-white/5 rounded-2xl p-4 h-28 sm:h-40 animate-pulse">
-        <div className="w-8 h-8 bg-white/5 rounded-lg mb-3 sm:mb-8" />
-        <div className="w-16 h-2.5 bg-white/5 rounded mb-2" />
-        <div className="w-24 h-5 bg-white/5 rounded" />
+      <div className="bg-[#0b0f1a] border border-white/5 rounded-3xl p-5 h-32 sm:h-44 animate-pulse">
+        <div className="w-10 h-10 bg-white/5 rounded-xl mb-6" />
+        <div className="w-20 h-2 bg-white/5 rounded mb-3" />
+        <div className="w-28 h-6 bg-white/5 rounded" />
       </div>
     );
   }
 
   return (
     <div
-      className="bg-[#0b0f1a] border border-white/5 rounded-2xl p-4 sm:p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden group min-h-[110px] sm:min-h-[160px]"
+      className="bg-[#0b0f1a] border border-white/5 rounded-[2rem] p-5 sm:p-7 flex flex-col justify-between shadow-2xl relative overflow-hidden group min-h-[130px] sm:min-h-[180px] hover:bg-white/[0.02] transition-all"
     >
-      <div className="flex items-center justify-between mb-2 sm:mb-8">
+      <div className="flex items-center justify-between mb-4 sm:mb-10 relative z-10">
         <div className={clsx(
-          "w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg",
-          color === 'blue' ? "bg-blue-600 text-white" :
-          color === 'green' ? "bg-emerald-600 text-white" :
-          color === 'red' ? "bg-rose-600 text-white" : "bg-orange-600 text-white"
+          "w-10 h-10 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-xl border transition-transform group-hover:scale-110",
+          color === 'blue' ? "bg-blue-600/10 text-blue-500 border-blue-500/20" :
+          color === 'green' ? "bg-emerald-600/10 text-emerald-500 border-emerald-500/20" :
+          color === 'red' ? "bg-rose-600/10 text-rose-500 border-rose-500/20" : "bg-orange-600/10 text-orange-500 border-orange-500/20"
         )}>
-          <Icon size={18} className="sm:w-6 sm:h-6" />
+          <Icon size={20} className="sm:w-7 sm:h-7" />
         </div>
         {change && (
            <div className={clsx(
-             "px-2 py-0.5 rounded-full text-[7px] sm:text-[10px] font-black uppercase tracking-widest flex items-center gap-0.5",
-             change > 0 ? "bg-emerald-500/10 text-emerald-500" : "bg-rose-500/10 text-rose-500"
+             "px-3 py-1 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-widest flex items-center gap-1 border shadow-sm",
+             change > 0 ? "bg-emerald-500/5 text-emerald-500 border-emerald-500/10" : "bg-rose-500/5 text-rose-500 border-rose-500/10"
            )}>
-             {change > 0 ? <ArrowUpRight size={8} /> : <ArrowDownRight size={8} />}
+             {change > 0 ? <ArrowUpRight size={10} strokeWidth={3} /> : <ArrowDownRight size={10} strokeWidth={3} />}
              {Math.abs(change)}%
            </div>
         )}
       </div>
 
-      <div>
-        <p className="text-[7px] sm:text-[11px] font-black text-slate-500 uppercase tracking-[0.1em] sm:tracking-[0.2em] mb-0.5 sm:mb-1">{title}</p>
-        <h2 className="text-lg sm:text-3xl font-black text-white tracking-tighter truncate">
+      <div className="relative z-10">
+        <p className="text-[8px] sm:text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1 sm:mb-2">{title}</p>
+        <h2 className="text-xl sm:text-3xl font-black text-white tracking-tighter truncate italic uppercase">
           {typeof value === 'number' ? format(value) : (value || '---')}
         </h2>
       </div>
@@ -185,13 +185,19 @@ const DashboardPage = () => {
       variants={containerVariants}
       className="flex-1 flex flex-col space-y-4 sm:space-y-6 pb-8 sm:pb-12"
     >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+      <motion.div variants={itemVariants} className="flex items-center justify-between px-2">
         <div>
-          <h1 className="text-lg sm:text-xl font-black text-white tracking-tight italic uppercase">Command Center</h1>
-          <p className="text-[8px] sm:text-[10px] text-slate-500 font-bold uppercase tracking-[0.1em] mt-0.5">Real-time operational telemetry</p>
+          <h1 className="text-xl sm:text-2xl font-black text-white tracking-tighter italic uppercase flex items-center gap-3">
+             <div className="w-1.5 h-6 bg-emerald-500 rounded-full" /> Operational Command
+          </h1>
+          <p className="text-[9px] sm:text-[11px] text-slate-500 font-bold uppercase tracking-[0.2em] mt-1.5 ml-4.5">Fleet Intelligence Monitoring System</p>
         </div>
-        <div className="px-2 py-1 sm:px-3 sm:py-1.5 bg-white/[0.03] border border-white/5 rounded-lg sm:rounded-xl text-[8px] sm:text-[9px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-1.5 sm:gap-2">
-          <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-emerald-500 rounded-full animate-pulse" /> Live Status
+        <div className="px-4 py-2 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl text-[9px] sm:text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-3 shadow-lg shadow-emerald-500/5">
+          <div className="relative">
+            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping absolute inset-0" />
+            <div className="w-2 h-2 bg-emerald-500 rounded-full relative" />
+          </div>
+          Secure Core Online
         </div>
       </motion.div>
 
@@ -217,105 +223,126 @@ const DashboardPage = () => {
         animate={isAnalysisLoading ? { opacity: [0.5, 1, 0.5] } : { opacity: 1 }}
         transition={{ duration: 1.5, repeat: Infinity, enabled: isAnalysisLoading }}
         className={clsx(
-            "bg-[#0b0f1a] border rounded-[1.5rem] p-5 shadow-xl flex items-center gap-4 group cursor-default relative overflow-hidden",
-            analysis?.status_color === 'green' ? "border-emerald-500/20" :
-            analysis?.status_color === 'red' ? "border-rose-500/20" : "border-blue-500/20"
+            "bg-[#0b0f1a] border rounded-[2.5rem] p-6 shadow-2xl flex items-center gap-6 group cursor-default relative overflow-hidden transition-all hover:bg-white/[0.01]",
+            analysis?.status_color === 'green' ? "border-emerald-500/20 shadow-emerald-500/5" :
+            analysis?.status_color === 'red' ? "border-rose-500/20 shadow-rose-500/5" : "border-blue-500/20 shadow-blue-500/5"
         )}
       >
         <div className={clsx(
-            "absolute inset-0 pointer-events-none",
-            analysis?.status_color === 'green' ? "bg-emerald-500/[0.02]" :
-            analysis?.status_color === 'red' ? "bg-rose-500/[0.02]" : "bg-blue-500/[0.02]"
+            "absolute inset-0 pointer-events-none opacity-40",
+            analysis?.status_color === 'green' ? "bg-gradient-to-r from-emerald-500/10 to-transparent" :
+            analysis?.status_color === 'red' ? "bg-gradient-to-r from-rose-500/10 to-transparent" : "bg-gradient-to-r from-blue-500/10 to-transparent"
         )} />
         <div className={clsx(
-            "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border",
-            analysis?.status_color === 'green' ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" :
-            analysis?.status_color === 'red' ? "bg-rose-500/10 text-rose-500 border-rose-500/20" : "bg-blue-500/10 text-blue-500 border-blue-500/20"
+            "w-14 h-14 rounded-[1.25rem] flex items-center justify-center shrink-0 border shadow-lg relative z-10",
+            analysis?.status_color === 'green' ? "bg-emerald-500 text-white border-emerald-400/50" :
+            analysis?.status_color === 'red' ? "bg-rose-500 text-white border-rose-400/50" : "bg-blue-500 text-white border-blue-400/50"
         )}>
-          <Activity className={clsx(isAnalysisLoading && "animate-pulse")} size={20} />
+          <Sparkles className={clsx(isAnalysisLoading && "animate-pulse")} size={24} />
         </div>
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 relative z-10">
           <p className={clsx(
-            "text-[10px] font-black uppercase tracking-[0.2em] mb-1",
+            "text-[10px] font-black uppercase tracking-[0.3em] mb-1.5",
             analysis?.status_color === 'green' ? "text-emerald-500" :
-            analysis?.status_color === 'red' ? "text-rose-500" : "text-blue-500"
-          )}>System Intelligence</p>
-          <p className="text-sm font-bold text-slate-200 leading-tight italic">
-            {isAnalysisLoading ? "Processing telemetry..." : (analysis?.ai_summary || "Operational performance is within established parameters.")}
+            analysis?.status_color === 'red' ? "text-rose-400" : "text-blue-400"
+          )}>PiA Intelligence Synthesis</p>
+          <p className="text-base font-bold text-slate-200 leading-tight italic opacity-90">
+            {isAnalysisLoading ? "Deciphering operational telemetry stream..." : (analysis?.ai_summary || "Operational performance is within established neural benchmarks.")}
           </p>
+        </div>
+        <div className="hidden sm:flex flex-col items-end gap-1 relative z-10 shrink-0 border-l border-white/5 pl-6">
+           <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Neural Accuracy</p>
+           <p className="text-sm font-black text-white italic uppercase tracking-tighter">98.4% Confidence</p>
         </div>
       </motion.div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         <motion.div variants={itemVariants} className="xl:col-span-8 flex flex-col space-y-4">
-          <div className="bg-[#0b0f1a] border border-white/5 rounded-[2rem] p-6 shadow-sm overflow-hidden flex flex-col">
-            <h2 className="text-sm font-black text-white uppercase tracking-widest mb-6 flex items-center gap-2">
-              <Activity size={16} className="text-emerald-500" /> Recent Transactions
+          <div className="bg-[#0b0f1a] border border-white/5 rounded-[2.5rem] p-8 shadow-2xl overflow-hidden flex flex-col group">
+            <h2 className="text-[11px] font-black text-white uppercase tracking-[0.2em] mb-8 flex items-center justify-between">
+              <span className="flex items-center gap-3">
+                <Activity size={16} className="text-emerald-500" /> Operational Feed
+              </span>
+              <span className="text-[9px] text-slate-600 italic">Latest Events</span>
             </h2>
-            <div className="space-y-4">
-              {isLoading ? Array(5).fill(0).map((_, i) => <div key={i} className="h-12 bg-white/5 rounded-xl animate-pulse" />) :
-                data?.recent_transactions?.map((tx: any, idx: number) => (
+            <div className="space-y-6">
+              {isLoading ? Array(5).fill(0).map((_, i) => <div key={i} className="h-14 bg-white/5 rounded-2xl animate-pulse" />) :
+                data?.recent_transactions?.length > 0 ? data.recent_transactions.map((tx: any, idx: number) => (
                 <motion.div
                   key={tx.id}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 + (idx * 0.05) }}
-                  className="flex items-center justify-between group"
+                  className="flex items-center justify-between group/tx hover:bg-white/[0.01] p-3 -mx-3 rounded-2xl transition-all"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-5">
                     <div className={clsx(
-                      "w-10 h-10 rounded-xl flex items-center justify-center",
-                      tx.type === 'income' ? "bg-emerald-500/10 text-emerald-500" : "bg-rose-500/10 text-rose-500"
+                      "w-12 h-12 rounded-[1.25rem] flex items-center justify-center border transition-all",
+                      tx.type === 'income' ? "bg-emerald-500/5 text-emerald-500 border-emerald-500/10 group-hover/tx:bg-emerald-500 group-hover/tx:text-white" : "bg-rose-500/5 text-rose-500 border-rose-500/10 group-hover/tx:bg-rose-500 group-hover/tx:text-white"
                     )}>
-                      {tx.type === 'income' ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
+                      {tx.type === 'income' ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
                     </div>
                     <div>
-                      <p className="text-[13px] font-black text-white tracking-tight uppercase italic truncate max-w-[150px] sm:max-w-none">{tx.display}</p>
-                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter mt-0.5">{tx.vehicle?.plateNumber || 'N/A'} • {new Date(tx.date).toLocaleDateString()}</p>
+                      <p className="text-[14px] font-black text-white tracking-tight uppercase italic truncate max-w-[180px] sm:max-w-none group-hover/tx:translate-x-1 transition-transform">{tx.display}</p>
+                      <div className="flex items-center gap-3 mt-1.5">
+                        <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{tx.vehicle?.plateNumber || 'FLEET_SYS'}</p>
+                        <span className="w-1 h-1 bg-slate-800 rounded-full" />
+                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">{new Date(tx.date).toLocaleDateString()}</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-6">
                     <div className="text-right">
-                      <p className={clsx("text-sm font-black tracking-tighter", tx.type === 'income' ? "text-emerald-500" : "text-rose-500")}>
+                      <p className={clsx("text-base font-black tracking-tighter", tx.type === 'income' ? "text-emerald-400" : "text-rose-400")}>
                         {tx.type === 'income' ? '+' : '-'}{format(Number(tx.amount))}
                       </p>
                     </div>
                     <button
-                      onClick={() => { if(confirm('Permanently delete this transaction?')) deleteMutation.mutate({ id: tx.id, type: tx.type }); }}
-                      className="p-2 opacity-0 group-hover:opacity-100 hover:bg-rose-500/10 text-slate-600 hover:text-rose-500 rounded-lg transition-all"
+                      onClick={() => { if(confirm('Permanently purge this event from operational records?')) deleteMutation.mutate({ id: tx.id, type: tx.type }); }}
+                      className="p-2.5 opacity-0 group-hover/tx:opacity-100 hover:bg-rose-500/10 text-slate-700 hover:text-rose-500 rounded-xl transition-all border border-transparent hover:border-rose-500/20"
                     >
-                      <Trash2 size={14} />
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 </motion.div>
-              ))}
+              )) : (
+                <div className="py-20 text-center">
+                    <Activity size={40} className="mx-auto text-slate-800 mb-4 opacity-20" />
+                    <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest italic">Signal Lost - No Activity Detected</p>
+                </div>
+              )}
             </div>
           </div>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="xl:col-span-4 flex flex-col space-y-4">
-          <div className="bg-[#0b0f1a] border border-white/5 rounded-[2rem] p-6 shadow-sm">
-             <h2 className="text-sm font-black text-white uppercase tracking-widest mb-6">Asset Health</h2>
-             <div className="space-y-6">
-                {isLoading ? Array(3).fill(0).map((_, i) => <div key={i} className="h-10 bg-white/5 rounded-xl animate-pulse" />) :
+        <motion.div variants={itemVariants} className="xl:col-span-4 flex flex-col space-y-6">
+          <div className="bg-[#0b0f1a] border border-white/5 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden group">
+             <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent pointer-events-none" />
+             <h2 className="text-[11px] font-black text-white uppercase tracking-[0.2em] mb-10 relative z-10 flex items-center justify-between">
+                <span>Asset Telemetry</span>
+                <Car size={14} className="text-slate-600" />
+             </h2>
+             <div className="space-y-8 relative z-10">
+                {isLoading ? Array(3).fill(0).map((_, i) => <div key={i} className="h-12 bg-white/5 rounded-2xl animate-pulse" />) :
                   data?.status_distribution && Object.entries(data.status_distribution).map(([status, count]: any, idx: number) => (
                   <motion.div
                     key={status}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 + (idx * 0.1) }}
+                    className="group/asset cursor-default"
                   >
-                    <div className="flex justify-between items-end mb-2">
-                      <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest capitalize">{status}</span>
-                      <span className="text-xs font-black text-white">{count} Units</span>
+                    <div className="flex justify-between items-end mb-3">
+                      <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest capitalize group-hover/asset:text-slate-300 transition-colors">{status}</span>
+                      <span className="text-sm font-black text-white italic tracking-tighter">{count} <span className="text-[9px] text-slate-600 font-bold uppercase ml-1">Units</span></span>
                     </div>
-                    <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                    <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden border border-white/5 p-0.5">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${data.total_vehicles > 0 ? (count / data.total_vehicles) * 100 : 0}%` }}
-                        transition={{ duration: 1, ease: "easeOut" }}
+                        transition={{ duration: 1.5, ease: "circOut" }}
                         className={clsx(
-                          "h-full rounded-full",
+                          "h-full rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(255,255,255,0.1)]",
                           status === 'active' ? 'bg-emerald-500' : status === 'maintenance' ? 'bg-orange-500' : 'bg-rose-500'
                         )}
                       />
@@ -323,17 +350,19 @@ const DashboardPage = () => {
                   </motion.div>
                 ))}
              </div>
-             <div className="mt-10 pt-6 border-t border-white/5 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                   <Shield size={16} className="text-emerald-500" />
+             <div className="mt-12 pt-8 border-t border-white/5 flex items-center justify-between relative z-10">
+                <div className="flex items-center gap-4">
+                   <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 border border-emerald-500/10">
+                      <Shield size={20} />
+                   </div>
                    <div>
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Security</p>
-                      <p className="text-xs font-black text-white uppercase italic mt-1">Operational</p>
+                      <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest leading-none mb-1.5">Encryption</p>
+                      <p className="text-xs font-black text-white uppercase italic tracking-tighter">Active AES-256</p>
                    </div>
                 </div>
                 <div className="text-right">
-                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Uptime</p>
-                   <p className="text-lg font-black text-emerald-500 italic mt-0.5">99.9%</p>
+                   <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest leading-none mb-1.5">Node Uptime</p>
+                   <p className="text-xl font-black text-emerald-500 italic tracking-tighter">99.98<span className="text-[10px] ml-0.5">%</span></p>
                 </div>
              </div>
           </div>

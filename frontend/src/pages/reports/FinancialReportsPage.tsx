@@ -16,7 +16,8 @@ import {
   AlertCircle,
   RefreshCw,
   ChevronDown,
-  Trash2
+  Trash2,
+  Activity
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
@@ -345,65 +346,68 @@ const FinancialReportsPage = () => {
       </motion.div>
 
       {/* Financial Flow Formula (Visual for Layman) */}
-      <motion.div variants={itemVariants} className="bg-[#0b0f1a] border border-white/5 rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 shadow-2xl relative overflow-hidden">
-        <div className="absolute inset-0 bg-emerald-500/[0.01] pointer-events-none" />
-        <h3 className="text-[8px] sm:text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4 sm:mb-8 text-center sm:text-left">Operational Cash Flow Breakdown</h3>
+      <motion.div variants={itemVariants} className="bg-[#0b0f1a] border border-white/5 rounded-[2.5rem] p-6 sm:p-10 shadow-2xl relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] to-transparent pointer-events-none" />
 
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-8 lg:gap-4">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-10 relative z-10">
             {/* Income */}
-            <div className="flex flex-row lg:flex-col items-center lg:text-center gap-4 lg:space-y-3 flex-1 w-full lg:w-auto">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-500/10 rounded-xl sm:rounded-2xl flex items-center justify-center text-emerald-500 border border-emerald-500/20 shrink-0">
-                    <TrendingUp size={20} className="sm:w-6 sm:h-6" />
+            <div className="flex flex-row lg:flex-col items-center lg:text-center gap-5 flex-1 w-full lg:w-auto group/item">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-emerald-500/10 rounded-2xl sm:rounded-[1.5rem] flex items-center justify-center text-emerald-500 border border-emerald-500/10 shadow-lg shadow-emerald-500/5 transition-transform group-hover/item:scale-110">
+                    <TrendingUp size={24} className="sm:w-8 sm:h-8" />
                 </div>
                 <div>
-                    <p className="text-[8px] sm:text-[9px] font-black text-slate-500 uppercase tracking-widest">Money Collected</p>
-                    <p className="text-lg sm:text-2xl font-black text-white tracking-tighter mt-0.5 sm:mt-1">{formatValue(summary?.total_income || 0)}</p>
+                    <p className="text-[9px] sm:text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">Gross Inflow</p>
+                    <p className="text-xl sm:text-3xl font-black text-white tracking-tighter mt-1 italic uppercase">{formatValue(summary?.total_income || 0)}</p>
                 </div>
             </div>
 
-            <div className="text-slate-700 font-black text-2xl hidden lg:block">−</div>
+            <div className="text-slate-800 font-black text-3xl hidden lg:block opacity-40">−</div>
             <div className="w-full h-px bg-white/5 lg:hidden" />
 
             {/* Deductions Group */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 flex-1 w-full lg:w-auto">
-                <div className="flex flex-row sm:flex-col items-center sm:text-center gap-4 sm:space-y-3 w-full sm:w-auto">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-rose-500/10 rounded-xl sm:rounded-2xl flex items-center justify-center text-rose-500 border border-rose-500/20 shrink-0">
-                        <TrendingDown size={20} className="sm:w-6 sm:h-6" />
+            <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-12 flex-1 w-full lg:w-auto">
+                <div className="flex flex-row sm:flex-col items-center sm:text-center gap-5 w-full sm:w-auto group/item">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-rose-500/10 rounded-2xl sm:rounded-[1.5rem] flex items-center justify-center text-rose-500 border border-rose-500/10 shadow-lg shadow-rose-500/5 transition-transform group-hover/item:scale-110">
+                        <TrendingDown size={24} className="sm:w-8 sm:h-8" />
                     </div>
                     <div>
-                        <p className="text-[8px] sm:text-[9px] font-black text-slate-500 uppercase tracking-widest">General Spent</p>
-                        <p className="text-base sm:text-xl font-black text-slate-300 tracking-tighter mt-0.5 sm:mt-1">{formatValue(summary?.total_expense || 0)}</p>
+                        <p className="text-[9px] sm:text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">General Ops</p>
+                        <p className="text-lg sm:text-2xl font-black text-slate-300 tracking-tighter mt-1 italic uppercase">{formatValue(summary?.total_expense || 0)}</p>
                     </div>
                 </div>
 
-                <div className="text-slate-800 font-black text-xl hidden sm:block">+</div>
+                <div className="text-slate-800 font-black text-2xl hidden sm:block opacity-20">+</div>
 
-                <div className="flex flex-row sm:flex-col items-center sm:text-center gap-4 sm:space-y-3 w-full sm:w-auto">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-500/10 rounded-xl sm:rounded-2xl flex items-center justify-center text-orange-500 border border-orange-500/20 shrink-0">
-                        <Fuel size={20} className="sm:w-6 sm:h-6" />
+                <div className="flex flex-row sm:flex-col items-center sm:text-center gap-5 w-full sm:w-auto group/item">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-orange-500/10 rounded-2xl sm:rounded-[1.5rem] flex items-center justify-center text-orange-500 border border-orange-500/10 shadow-lg shadow-orange-500/5 transition-transform group-hover/item:scale-110">
+                        <Fuel size={24} className="sm:w-8 sm:h-8" />
                     </div>
                     <div>
-                        <p className="text-[8px] sm:text-[9px] font-black text-slate-500 uppercase tracking-widest">Fuel Spending</p>
-                        <p className="text-base sm:text-xl font-black text-slate-300 tracking-tighter mt-0.5 sm:mt-1">{formatValue(summary?.total_fuel_cost || 0)}</p>
+                        <p className="text-[9px] sm:text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">Fuel Burn</p>
+                        <p className="text-lg sm:text-2xl font-black text-slate-300 tracking-tighter mt-1 italic uppercase">{formatValue(summary?.total_fuel_cost || 0)}</p>
                     </div>
                 </div>
             </div>
 
-            <div className="text-emerald-500 font-black text-3xl hidden lg:block">=</div>
+            <div className="text-emerald-500 font-black text-4xl hidden lg:block opacity-60">=</div>
             <div className="w-full h-px bg-white/5 lg:hidden" />
 
             {/* Final Result */}
-            <div className="flex flex-row lg:flex-col items-center lg:text-center gap-4 lg:space-y-3 flex-1 bg-white/[0.02] border border-white/5 p-3 sm:p-4 rounded-xl sm:rounded-[1.5rem] w-full lg:w-auto">
+            <div className="flex flex-row lg:flex-col items-center lg:text-center gap-5 flex-1 bg-white/[0.03] border border-white/10 p-5 sm:p-7 rounded-[2rem] sm:rounded-[2.5rem] w-full lg:w-auto shadow-2xl relative group/result overflow-hidden">
                 <div className={clsx(
-                    "w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center border-2 shadow-2xl shrink-0",
-                    (summary?.net_profit || 0) >= 0 ? "bg-emerald-600 text-white border-emerald-400 shadow-emerald-500/20" : "bg-rose-600 text-white border-rose-400 shadow-rose-500/20"
+                    "absolute inset-0 opacity-10 transition-colors duration-500",
+                    (summary?.net_profit || 0) >= 0 ? "bg-emerald-500" : "bg-rose-500"
+                )} />
+                <div className={clsx(
+                    "w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-[1.75rem] flex items-center justify-center border-2 shadow-2xl shrink-0 transition-all duration-500 relative z-10",
+                    (summary?.net_profit || 0) >= 0 ? "bg-emerald-600 text-white border-emerald-400 shadow-emerald-500/30 group-hover/result:scale-110" : "bg-rose-600 text-white border-rose-400 shadow-rose-500/30 group-hover/result:scale-110"
                 )}>
-                    <DollarSign size={24} className="sm:w-7 sm:h-7" />
+                    <DollarSign size={28} className="sm:w-10 sm:h-10" />
                 </div>
-                <div>
-                    <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] sm:tracking-[0.2em]">{ (summary?.net_profit || 0) >= 0 ? "Profit Remaining" : "Money Shortfall"}</p>
+                <div className="relative z-10">
+                    <p className="text-[10px] sm:text-[12px] font-black text-slate-400 uppercase tracking-[0.2em]">{ (summary?.net_profit || 0) >= 0 ? "Net Portfolio" : "Net Deficit"}</p>
                     <p className={clsx(
-                        "text-xl sm:text-3xl font-black tracking-tightest mt-0.5 sm:mt-1",
+                        "text-2xl sm:text-4xl font-black tracking-tightest mt-1 italic uppercase",
                         (summary?.net_profit || 0) >= 0 ? "text-emerald-400" : "text-rose-400"
                     )}>{formatValue(Math.abs(summary?.net_profit || 0))}</p>
                 </div>
@@ -414,15 +418,18 @@ const FinancialReportsPage = () => {
       {/* Intelligence Sector */}
       <div className="flex-1 grid grid-cols-1 xl:grid-cols-12 gap-4 min-h-0">
         <motion.div variants={itemVariants} className="xl:col-span-8 flex flex-col gap-4">
-          <div className="bg-[#0b0f1a] border border-white/5 rounded-lg p-5 shadow-sm relative overflow-hidden group">
-             <div className="flex items-center justify-between mb-5">
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-emerald-600/10 rounded text-emerald-400 border border-emerald-500/10">
-                        <Zap size={18} />
+          <div className="bg-[#0b0f1a] border border-white/5 rounded-3xl p-6 shadow-2xl relative overflow-hidden group">
+             <div className="flex items-center justify-between mb-8 relative z-10">
+                <div className="flex items-center gap-4">
+                    <div className="p-3 bg-emerald-500/10 rounded-2xl text-emerald-400 border border-emerald-500/10 shadow-lg shadow-emerald-500/5">
+                        <Sparkles size={20} className="animate-pulse" />
                     </div>
                     <div>
-                        <h2 className="text-[11px] font-black text-white uppercase tracking-widest">Business Coach Explanation</h2>
-                        <p className="text-slate-500 font-bold text-[9px] uppercase tracking-wider">Simple Summary for {timeframe}</p>
+                        <h2 className="text-xs font-black text-white uppercase tracking-[0.2em]">Neural Intelligence Analysis</h2>
+                        <div className="flex items-center gap-2 mt-1">
+                            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
+                            <p className="text-slate-500 font-bold text-[9px] uppercase tracking-widest italic">Live Synthesis for {timeframe}</p>
+                        </div>
                     </div>
                 </div>
                 <button
@@ -430,136 +437,211 @@ const FinancialReportsPage = () => {
                     setDisplayText('');
                     refetchSummary();
                     refetchAI();
-                    toast.success('Analyzing records...');
+                    toast.success('Re-analyzing operational telemetry...');
                   }}
-                  className="p-2 bg-white/5 hover:bg-white/10 rounded text-slate-500 transition-all disabled:opacity-50"
+                  className="p-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-slate-400 transition-all disabled:opacity-50 border border-white/5 hover:text-white"
                   disabled={isSummaryLoading || isAnalysisLoading}
                 >
-                  <RefreshCw size={14} className={clsx((isSummaryLoading || isAnalysisLoading) && "animate-spin")} />
+                  <RefreshCw size={16} className={clsx((isSummaryLoading || isAnalysisLoading) && "animate-spin")} />
                 </button>
              </div>
 
-             <div className="space-y-5">
-                <div className="flex gap-4">
+             <div className="space-y-6 relative z-10">
+                <div className="flex gap-6">
                   <div className={clsx(
-                    "w-1.5 h-auto min-h-[40px] rounded-full shrink-0",
-                    analysis?.status_color === 'green' ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" :
-                    analysis?.status_color === 'red' ? "bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]" : "bg-blue-500"
+                    "w-1 h-auto min-h-[60px] rounded-full shrink-0",
+                    analysis?.status_color === 'green' ? "bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.4)]" :
+                    analysis?.status_color === 'red' ? "bg-rose-500 shadow-[0_0_20px_rgba(244,63,94,0.4)]" : "bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.4)]"
                   )} />
-                  <div className="text-sm text-slate-200 leading-relaxed font-medium">
+                  <div className="text-[15px] text-slate-200 leading-relaxed font-medium tracking-tight">
                     {displayText ? (
-                      <div className="whitespace-pre-line italic">"{displayText}"</div>
+                      <div className="whitespace-pre-line italic font-serif opacity-90">"{displayText}"</div>
                     ) : (
-                      <span className="italic text-slate-500 tracking-wide">PiA is reading your data...</span>
+                      <div className="flex flex-col gap-2">
+                        <div className="h-4 bg-white/5 rounded w-full animate-pulse" />
+                        <div className="h-4 bg-white/5 rounded w-5/6 animate-pulse" />
+                        <div className="h-4 bg-white/5 rounded w-4/6 animate-pulse" />
+                      </div>
                     )}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                   <div className="p-4 bg-white/[0.02] border border-white/5 rounded-lg">
-                      <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-2">Money Health</p>
+                   <div className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl backdrop-blur-sm group/card hover:bg-white/[0.04] transition-all">
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <Activity size={12} className="text-blue-400" /> Operational Vitality
+                      </p>
                       <div className="flex items-end gap-2">
                         <span className={clsx(
-                            "text-xl font-black tracking-tight leading-none",
-                            analysis?.status_color === 'green' ? "text-emerald-500" :
-                            analysis?.status_color === 'red' ? "text-rose-500" : "text-blue-500"
-                        )}>{analysis?.status_label === 'Healthy' ? 'Doing Well' : analysis?.status_label === 'Critical Warning' ? 'Spending Too Much' : 'Just Breaking Even'}</span>
+                            "text-2xl font-black tracking-tighter leading-none",
+                            analysis?.status_color === 'green' ? "text-emerald-400" :
+                            analysis?.status_color === 'red' ? "text-rose-400" : "text-blue-400"
+                        )}>{analysis?.status_label === 'Healthy' ? 'OPTIMAL' : analysis?.status_label === 'Critical Warning' ? 'HIGH RISK' : 'STABLE'}</span>
                       </div>
-                      <p className="text-[8px] text-slate-600 font-bold uppercase mt-2">{analysis?.net_profit >= 0 ? "You are saving money" : "You are losing money this period"}</p>
+                      <p className="text-[9px] text-slate-600 font-black uppercase mt-3 tracking-tighter italic border-t border-white/5 pt-3">
+                        {analysis?.net_profit >= 0 ? "Surplus generation active" : "Deficit mitigation required"}
+                      </p>
                    </div>
-                   <div className="p-4 bg-white/[0.02] border border-white/5 rounded-lg">
-                      <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-2">Fuel Spending Check</p>
-                      <p className="text-[12px] text-slate-300 font-bold tracking-tight uppercase">{analysis?.fuel_efficiency}</p>
+                   <div className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl backdrop-blur-sm group/card hover:bg-white/[0.04] transition-all">
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <Fuel size={12} className="text-orange-400" /> Resource Consumption
+                      </p>
+                      <p className="text-[14px] text-slate-200 font-black tracking-tight uppercase leading-tight italic">{analysis?.fuel_efficiency}</p>
+                      <div className="mt-3 h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                        <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: '70%' }}
+                            className="h-full bg-orange-500/50 rounded-full"
+                        />
+                      </div>
                    </div>
                 </div>
              </div>
           </div>
 
-          <div className="bg-[#0b0f1a] border border-white/5 rounded-lg p-5 shadow-sm flex-1">
-            <h3 className="text-[10px] font-black text-slate-500 mb-5 uppercase tracking-widest flex items-center gap-2">
-              <Zap size={14} className="text-emerald-500 fill-emerald-500" /> Things to do next
+          <div className="bg-[#0b0f1a] border border-white/5 rounded-3xl p-6 shadow-2xl flex-1 flex flex-col overflow-hidden">
+            <h3 className="text-[11px] font-black text-slate-500 mb-6 uppercase tracking-[0.2em] flex items-center gap-3 px-2">
+              <Zap size={16} className="text-emerald-500 fill-emerald-500 animate-pulse" /> Tactical Directives
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {analysis?.recommendations?.slice(0, 3).map((rec: string, i: number) => (
+            <div className="flex gap-5 overflow-x-auto pb-4 px-2 snap-x custom-scrollbar">
+              {analysis?.recommendations?.map((rec: string, i: number) => (
                    <motion.div
                     key={i}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.4 + (i * 0.1) }}
-                    className="p-4 bg-white/[0.01] border border-white/5 rounded-lg space-y-3"
+                    initial={{ opacity: 0, x: 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1 * i, type: "spring", stiffness: 100 }}
+                    whileHover={{ y: -5 }}
+                    className="min-w-[280px] sm:min-w-[320px] p-6 bg-gradient-to-br from-white/[0.04] to-transparent border border-white/5 rounded-[2rem] space-y-5 hover:border-emerald-500/20 transition-all group/rec relative overflow-hidden snap-center"
                    >
-                      <div className="w-7 h-7 rounded bg-emerald-600/10 flex items-center justify-center text-emerald-400 text-[11px] font-black">
-                         {i + 1}
+                      <div className="flex items-center justify-between">
+                        <div className="w-10 h-10 rounded-2xl bg-emerald-600/10 flex items-center justify-center text-emerald-400 text-[14px] font-black border border-emerald-500/10 group-hover/rec:bg-emerald-500 group-hover/rec:text-white transition-all shadow-lg">
+                            {i + 1}
+                        </div>
+                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full group-hover/rec:animate-ping" />
                       </div>
-                      <p className="text-[11px] text-slate-400 font-medium leading-relaxed tracking-tight">{rec}</p>
+                      <p className="text-[13px] text-slate-300 font-bold leading-relaxed tracking-tight group-hover/rec:text-white transition-colors uppercase italic">{rec}</p>
+
+                      <div className="pt-4 border-t border-white/5 flex items-center justify-between opacity-40 group-hover/rec:opacity-100 transition-opacity">
+                        <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest group-hover/rec:text-emerald-500">Priority High</span>
+                        <TrendingUp size={12} className="text-slate-600 group-hover/rec:text-emerald-500" />
+                      </div>
                    </motion.div>
               ))}
             </div>
           </div>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="xl:col-span-4 flex flex-col gap-4">
-          <div className="bg-[#0b0f1a] border border-white/5 rounded-lg p-5 shadow-sm flex flex-col items-center">
-            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-5 w-full text-left">Money Kept</h3>
-            <div className="relative flex items-center justify-center py-4">
-               <svg className="w-40 h-40 -rotate-90">
-                 <circle cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-white/[0.02]" />
+        <motion.div variants={itemVariants} className="xl:col-span-4 flex flex-col gap-6">
+          <div className="bg-[#0b0f1a] border border-white/5 rounded-3xl p-8 shadow-2xl flex flex-col items-center relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.02] to-transparent pointer-events-none" />
+            <h3 className="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] mb-8 w-full text-left relative z-10">Net Yield Ratio</h3>
+
+            <div className="relative flex items-center justify-center py-6 relative z-10">
+               {/* Decorative Glow */}
+               <div className={clsx(
+                   "absolute inset-0 blur-[40px] opacity-20 rounded-full transition-colors duration-1000",
+                   analysis?.status_color === 'green' ? "bg-emerald-500" :
+                   analysis?.status_color === 'red' ? "bg-rose-500" : "bg-blue-500"
+               )} />
+
+               <svg className="w-48 h-48 -rotate-90 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                 <circle cx="96" cy="96" r="84" stroke="currentColor" strokeWidth="16" fill="transparent" className="text-white/[0.03]" />
                  <motion.circle
-                   initial={{ strokeDashoffset: 439.8 }}
-                   animate={{ strokeDashoffset: 439.8 - (439.8 * Math.max(0, Math.min(100, Number(analysis?.profit_margin) || 0)) / 100) }}
-                   transition={{ duration: 1.5, ease: "easeInOut" }}
-                   cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="12" fill="transparent"
+                   initial={{ strokeDashoffset: 527.7 }}
+                   animate={{ strokeDashoffset: 527.7 - (527.7 * Math.max(0, Math.min(100, Number(analysis?.profit_margin) || 0)) / 100) }}
+                   transition={{ duration: 2, ease: "circOut" }}
+                   cx="96" cy="96" r="84" stroke="currentColor" strokeWidth="16" fill="transparent"
                    className={clsx(
+                    "transition-colors duration-1000",
                     analysis?.status_color === 'green' ? "text-emerald-500" :
                     analysis?.status_color === 'red' ? "text-rose-500" : "text-blue-500"
                    )}
-                   strokeDasharray={439.8}
+                   strokeDasharray={527.7}
                    strokeLinecap="round"
                  />
                </svg>
                <div className="absolute flex flex-col items-center">
-                  <span className="text-3xl font-black text-white tracking-tighter">{Math.abs(analysis?.profit_margin || 0)}%</span>
-                  <span className="text-[8px] font-black text-slate-600 uppercase mt-1 text-center px-6">
-                    {analysis?.profit_margin >= 0 ? "kept as profit" : "more spent than earned"}
+                  <motion.span
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="text-4xl font-black text-white tracking-tighter"
+                  >
+                    {Math.abs(analysis?.profit_margin || 0)}%
+                  </motion.span>
+                  <span className="text-[10px] font-black text-slate-500 uppercase mt-2 tracking-widest italic bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                    {analysis?.profit_margin >= 0 ? "Kept" : "Loss"}
                   </span>
                </div>
             </div>
+
+            <p className="mt-8 text-[9px] text-slate-500 font-bold uppercase tracking-[0.15em] text-center leading-relaxed italic opacity-60">
+                Calculated efficiency based on <br/> gross revenue vs operational burn
+            </p>
           </div>
 
-          <div className="bg-[#0b0f1a] border border-white/5 rounded-lg overflow-hidden shadow-sm">
-            <div className="px-5 py-3 border-b border-white/5 bg-white/[0.01]">
-              <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Recent Activity</h3>
+          <div className="bg-[#0b0f1a] border border-white/5 rounded-3xl overflow-hidden shadow-2xl flex-1 flex flex-col">
+            <div className="px-6 py-5 border-b border-white/5 bg-white/[0.01] flex items-center justify-between">
+              <h3 className="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">Telemetry Log</h3>
+              <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,1)]" />
             </div>
-            <div className="divide-y divide-white/[0.03]">
-               {summary?.recent_transactions?.slice(0, 10).map((tx: any, idx: number) => (
+            <div className="divide-y divide-white/[0.03] overflow-y-auto custom-scrollbar flex-1">
+               {summary?.recent_transactions?.length > 0 ? summary?.recent_transactions?.map((tx: any, idx: number) => (
                  <motion.div
                     key={tx.id}
                     initial={{ opacity: 0, x: 10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2 + (idx * 0.05) }}
-                    className="px-5 py-3.5 flex items-center gap-4 hover:bg-white/[0.01] transition-colors group"
+                    className="px-6 py-4 flex items-center gap-5 hover:bg-white/[0.02] transition-all group cursor-default"
                  >
                     <div className={clsx(
-                      "w-1 h-7 rounded-full",
-                      tx.type === 'income' ? "bg-emerald-500" : "bg-rose-500"
+                      "w-1 h-10 rounded-full transition-all group-hover:w-1.5",
+                      tx.type === 'income' ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]" : "bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.3)]"
                     )} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-[11px] font-bold text-slate-200 truncate uppercase tracking-tight">{tx.display}</p>
-                      <p className="text-[9px] text-slate-600 font-bold uppercase tracking-widest mt-1">{new Date(tx.date).toLocaleDateString()}</p>
+                      <p className="text-[12px] font-black text-slate-200 truncate uppercase tracking-tight italic group-hover:text-white transition-colors">{tx.display}</p>
+                      <div className="flex items-center gap-2 mt-1.5">
+                        <p className="text-[9px] text-slate-600 font-bold uppercase tracking-widest">{new Date(tx.date).toLocaleDateString()}</p>
+                        <span className="text-slate-800">•</span>
+                        <p className="text-[9px] text-slate-600 font-black uppercase italic">{tx.type}</p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <p className={clsx("text-xs font-black tracking-tighter", tx.type === 'income' ? "text-emerald-500" : "text-rose-500")}>
+                    <div className="flex items-center gap-4">
+                        <p className={clsx("text-[13px] font-black tracking-tighter", tx.type === 'income' ? "text-emerald-400" : "text-rose-400")}>
                             {tx.type === 'income' ? '+' : '-'}{formatValue(Number(tx.amount))}
                         </p>
                         <button
-                          onClick={() => { if(confirm('Delete this record?')) deleteMutation.mutate({ id: tx.id, type: tx.type }); }}
-                          className="p-1.5 opacity-0 group-hover:opacity-100 hover:bg-rose-500/10 text-slate-600 hover:text-rose-500 rounded transition-all"
+                          onClick={() => { if(confirm('Erase this record from ledger?')) deleteMutation.mutate({ id: tx.id, type: tx.type }); }}
+                          className="p-2 opacity-0 group-hover:opacity-100 hover:bg-rose-500/10 text-slate-600 hover:text-rose-500 rounded-xl transition-all border border-transparent hover:border-rose-500/20"
                         >
-                          <Trash2 size={12} />
+                          <Trash2 size={14} />
                         </button>
                     </div>
                  </motion.div>
-               ))}
+               )) : (
+                 <div className="flex-1 flex flex-col items-center justify-center p-12 text-center relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/[0.02] to-transparent pointer-events-none" />
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="relative z-10"
+                    >
+                        <div className="w-20 h-20 bg-white/[0.02] border border-white/5 rounded-[2rem] flex items-center justify-center mb-6 mx-auto shadow-2xl relative group">
+                            <Activity size={32} className="text-slate-700 group-hover:text-emerald-500/50 transition-colors duration-500" />
+                            <div className="absolute inset-0 bg-emerald-500/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                        </div>
+                        <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2 italic">Signal Lost</h4>
+                        <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest max-w-[180px] leading-relaxed">
+                            No operational telemetry detected for the selected timeframe.
+                        </p>
+                        <div className="mt-8 flex items-center justify-center gap-2">
+                            <div className="w-1 h-1 bg-slate-800 rounded-full animate-bounce" />
+                            <div className="w-1 h-1 bg-slate-800 rounded-full animate-bounce [animation-delay:0.2s]" />
+                            <div className="w-1 h-1 bg-slate-800 rounded-full animate-bounce [animation-delay:0.4s]" />
+                        </div>
+                    </motion.div>
+                 </div>
+               )}
             </div>
           </div>
         </motion.div>

@@ -4,7 +4,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { formatCurrency, getExchangeRate } from '../utils/currency';
 import * as NotificationService from '../services/notification.service';
 
-const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'favmoms440@gmail.com').toLowerCase();
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'josephotoo774@gmail.com').toLowerCase();
 
 /**
  * AI CORE CONFIGURATION
